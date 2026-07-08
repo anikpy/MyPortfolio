@@ -13,13 +13,15 @@
     theme: {
       extend: {
         colors: {
-          base: '#0A0E1A',
-          surface: '#121826',
-          surface2: '#182036',
-          teal: '#4FD1C5',
-          amber: '#F5B942',
-          ink: '#E7EAF0',
-          muted: '#7C879C',
+          base: '#0E0D08',
+          surface: '#1B1810',
+          surface2: '#241F13',
+          lime: '#C6F135',
+          teal: '#C6F135',
+          amber: '#FFD23F',
+          orange: '#FF8A3D',
+          ink: '#F5F3EA',
+          muted: '#A8A38C',
         },
         fontFamily: {
           display: ['Space Grotesk', 'sans-serif'],
@@ -32,7 +34,7 @@
 </script>
 <style>
   html { scroll-behavior: smooth; }
-  body { background: #0A0E1A; }
+  body { background: #0E0D08; }
   ::selection { background: #4FD1C5; color: #0A0E1A; }
 
   .grain::before {
@@ -44,11 +46,11 @@
 
   .glow-border {
     position: relative;
-    border: 1px solid rgba(79,209,197,0.15);
+    border: 1px solid rgba(198,241,53,0.15);
   }
   .glow-border:hover {
-    border-color: rgba(79,209,197,0.5);
-    box-shadow: 0 0 40px -12px rgba(79,209,197,0.35);
+    border-color: rgba(198,241,53,0.5);
+    box-shadow: 0 0 40px -12px rgba(198,241,53,0.35);
   }
 
   .tilt-card {
@@ -64,7 +66,7 @@
   }
 
   .timeline-line {
-    background: linear-gradient(to bottom, rgba(79,209,197,0.6), rgba(79,209,197,0.05));
+    background: linear-gradient(to bottom, rgba(198,241,53,0.6), rgba(198,241,53,0.05));
   }
 
   .skill-chip {
@@ -72,8 +74,8 @@
     transition: all 0.2s ease;
   }
   .skill-chip:hover {
-    background: rgba(79,209,197,0.12);
-    border-color: rgba(79,209,197,0.5);
+    background: rgba(198,241,53,0.12);
+    border-color: rgba(198,241,53,0.5);
     color: #4FD1C5;
   }
 
@@ -100,9 +102,9 @@
   }
 
   .current-badge {
-    background: rgba(245,185,66,0.12);
+    background: rgba(255,210,63,0.12);
     color: #F5B942;
-    border: 1px solid rgba(245,185,66,0.35);
+    border: 1px solid rgba(255,210,63,0.35);
   }
 
   .concurrent-badge {
@@ -294,7 +296,7 @@
       </div>
 
       <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-amber mb-3">INFRA / SEARCH</p>
+        <p class="section-eyebrow text-orange mb-3">INFRA / SEARCH</p>
         <h3 class="font-display text-xl font-semibold mb-2">3-Node ElasticSearch Cluster</h3>
         <p class="text-muted text-sm leading-relaxed mb-4">Vector-embedded bulk data store with semantic search and a custom-keyword layer, served through a Python ingestion API on Nginx.</p>
         <div class="flex flex-wrap gap-2">
@@ -316,7 +318,7 @@
       </div>
 
       <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-amber mb-3">MULTIMODAL</p>
+        <p class="section-eyebrow text-orange mb-3">MULTIMODAL</p>
         <h3 class="font-display text-xl font-semibold mb-2">Gemma 4B Image Explainer</h3>
         <p class="text-muted text-sm leading-relaxed mb-4">Production deployment of Gemma 4B for reading images and generating natural-language explanations at scale.</p>
         <div class="flex flex-wrap gap-2">
@@ -338,7 +340,7 @@
       </div>
 
       <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-amber mb-3">AUTOMATION</p>
+        <p class="section-eyebrow text-orange mb-3">AUTOMATION</p>
         <h3 class="font-display text-xl font-semibold mb-2">n8n Gmail Automation</h3>
         <p class="text-muted text-sm leading-relaxed mb-4">Deployed an n8n instance automating candidate-facing Gmail workflows end to end.</p>
         <div class="flex flex-wrap gap-2">
@@ -359,7 +361,7 @@
       </div>
 
       <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-amber mb-3">TOOLING</p>
+        <p class="section-eyebrow text-orange mb-3">TOOLING</p>
         <h3 class="font-display text-xl font-semibold mb-2">Document Processing API Suite</h3>
         <p class="text-muted text-sm leading-relaxed mb-4">PDF merger, image extractor, and text extractor APIs designed to streamline document workflows in production.</p>
         <div class="flex flex-wrap gap-2">
@@ -473,14 +475,16 @@
     const NODE_COUNT = 70;
     const nodes = [];
     const nodeGeo = new THREE.SphereGeometry(0.18, 8, 8);
-    const nodeMatTeal = new THREE.MeshBasicMaterial({ color: 0x4FD1C5, transparent: true, opacity: 0.85 });
-    const nodeMatAmber = new THREE.MeshBasicMaterial({ color: 0xF5B942, transparent: true, opacity: 0.85 });
+    const nodeMatLime = new THREE.MeshBasicMaterial({ color: 0xC6F135, transparent: true, opacity: 0.85 });
+    const nodeMatYellow = new THREE.MeshBasicMaterial({ color: 0xFFD23F, transparent: true, opacity: 0.85 });
+    const nodeMatOrange = new THREE.MeshBasicMaterial({ color: 0xFF8A3D, transparent: true, opacity: 0.85 });
 
     const group = new THREE.Group();
     scene.add(group);
 
     for (let i = 0; i < NODE_COUNT; i++) {
-      const mat = Math.random() > 0.85 ? nodeMatAmber : nodeMatTeal;
+      const r = Math.random();
+      const mat = r > 0.88 ? nodeMatOrange : (r > 0.65 ? nodeMatYellow : nodeMatLime);
       const mesh = new THREE.Mesh(nodeGeo, mat);
       const x = (Math.random() - 0.5) * 46;
       const y = (Math.random() - 0.5) * 26;
@@ -496,7 +500,7 @@
     }
 
     // connecting lines between nearby nodes
-    const lineMat = new THREE.LineBasicMaterial({ color: 0x4FD1C5, transparent: true, opacity: 0.12 });
+    const lineMat = new THREE.LineBasicMaterial({ color: 0xC6F135, transparent: true, opacity: 0.12 });
     const linePositions = [];
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
