@@ -1,372 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Md Arifur Rahman Anik — AI/ML & DevOps Engineer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          base: '#0E0D08',
-          surface: '#1B1810',
-          surface2: '#241F13',
-          lime: '#C6F135',
-          teal: '#C6F135',
-          amber: '#FFD23F',
-          orange: '#FF8A3D',
-          ink: '#F5F3EA',
-          muted: '#A8A38C',
-        },
-        fontFamily: {
-          display: ['Space Grotesk', 'sans-serif'],
-          body: ['Inter', 'sans-serif'],
-          mono: ['JetBrains Mono', 'monospace'],
-        }
-      }
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
   }
+}
 </script>
+
 <style>
-  html { scroll-behavior: smooth; }
-  body { background: #0E0D08; }
-  ::selection { background: #4FD1C5; color: #0A0E1A; }
-
-  .grain::before {
-    content: "";
-    position: fixed; inset: 0; z-index: 1; pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  :root{
+    --bg:#070617;
+    --bg2:#0d0a2c;
+    --ink:#f4f4ff;
+    --muted:#9a9bc7;
+    --c1:#ff2d95;  /* hot pink */
+    --c2:#7c3aed;  /* violet */
+    --c3:#06b6d4;  /* cyan */
+    --c4:#f59e0b;  /* amber */
+    --c5:#22d3ee;  /* sky */
+    --c6:#a3e635;  /* lime */
   }
-
-  .glow-border {
-    position: relative;
-    border: 1px solid rgba(198,241,53,0.15);
+  *{ -webkit-font-smoothing:antialiased; }
+  html,body{ background:var(--bg); color:var(--ink); font-family:'Outfit',sans-serif; overflow-x:hidden; }
+  .font-display{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.02em;}
+  .font-mono{ font-family:'JetBrains Mono', monospace;}
+  
+  /* 3D canvas behind */
+  #bg3d{ position:fixed; inset:0; z-index:0; pointer-events:none;}
+  
+  /* Aurora blobs */
+  .aurora{
+    position:fixed; border-radius:50%; filter:blur(80px); opacity:.5; z-index:0; pointer-events:none;
+    animation:float 14s ease-in-out infinite;
   }
-  .glow-border:hover {
-    border-color: rgba(198,241,53,0.5);
-    box-shadow: 0 0 40px -12px rgba(198,241,53,0.35);
+  @keyframes float{
+    0%,100%{ transform:translate(0,0) scale(1);}
+    50%{ transform:translate(40px,-30px) scale(1.15);}
   }
-
-  .tilt-card {
-    transition: transform 0.15s ease-out, box-shadow 0.3s ease;
-    transform-style: preserve-3d;
-    will-change: transform;
+  
+  /* gradient text */
+  .grad-text{
+    background:linear-gradient(120deg,var(--c1),var(--c2) 40%,var(--c3) 75%, var(--c4));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    background-size:200% 200%;
+    animation:shift 8s ease infinite;
   }
-
-  .section-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.15em;
-    font-size: 0.72rem;
+  @keyframes shift{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+  
+  /* glass card */
+  .glass{
+    background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border:1px solid rgba(255,255,255,0.10);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
   }
-
-  .timeline-line {
-    background: linear-gradient(to bottom, rgba(198,241,53,0.6), rgba(198,241,53,0.05));
+  .glass-hover{ transition:transform .45s cubic-bezier(.2,.7,.2,1), border-color .3s, box-shadow .4s; }
+  .glass-hover:hover{
+    transform:translateY(-6px) rotateX(4deg) rotateY(-4deg);
+    border-color:rgba(255,45,149,.45);
+    box-shadow:0 30px 60px -20px rgba(124,58,237,.35), 0 0 0 1px rgba(255,45,149,.2);
   }
-
-  .skill-chip {
-    font-family: 'JetBrains Mono', monospace;
-    transition: all 0.2s ease;
+  
+  /* nav */
+  .nav-pill{
+    background:rgba(13,10,44,.6); border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(12px);
   }
-  .skill-chip:hover {
-    background: rgba(198,241,53,0.12);
-    border-color: rgba(198,241,53,0.5);
-    color: #4FD1C5;
+  
+  /* tilt-on-hover wrapper handled via JS for cards */
+  
+  /* marquee */
+  .marquee{ display:flex; gap:3rem; animation:marq 30s linear infinite; }
+  @keyframes marq{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  
+  /* reveal */
+  .reveal{ opacity:0; transform:translateY(40px); transition:all .9s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in{ opacity:1; transform:none; }
+  
+  /* skill chip */
+  .chip{
+    background:linear-gradient(135deg, rgba(255,45,149,.12), rgba(124,58,237,.12));
+    border:1px solid rgba(255,255,255,.12);
+    transition:all .3s;
   }
-
-  #hero-canvas { position: absolute; inset: 0; z-index: 0; }
-
-  .fade-up {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+  .chip:hover{
+    transform:translateY(-3px) scale(1.05);
+    background:linear-gradient(135deg, rgba(255,45,149,.3), rgba(6,182,212,.3));
+    border-color:rgba(255,45,149,.5);
+    box-shadow:0 10px 30px -10px rgba(255,45,149,.5);
   }
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
+  
+  /* timeline */
+  .tl-line{
+    background:linear-gradient(180deg, var(--c1), var(--c2) 40%, var(--c3) 80%, transparent);
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    .fade-up { opacity: 1; transform: none; transition: none; }
-    .tilt-card { transition: none !important; transform: none !important; }
+  
+  /* project card glow border */
+  .pcard{ position:relative; overflow:hidden; }
+  .pcard::before{
+    content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px;
+    background:linear-gradient(135deg, var(--c1), var(--c2), var(--c3), var(--c4));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:0; transition:opacity .4s;
   }
-
-  a:focus-visible, button:focus-visible {
-    outline: 2px solid #4FD1C5;
-    outline-offset: 3px;
+  .pcard:hover::before{ opacity:1; }
+  .pcard::after{
+    content:''; position:absolute; width:200px; height:200px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,45,149,.25), transparent 70%);
+    top:var(--my,50%); left:var(--mx,50%); transform:translate(-50%,-50%);
+    opacity:0; transition:opacity .4s; pointer-events:none;
   }
-
-  .current-badge {
-    background: rgba(255,210,63,0.12);
-    color: #F5B942;
-    border: 1px solid rgba(255,210,63,0.35);
+  .pcard:hover::after{ opacity:1; }
+  
+  /* button */
+  .btn-grad{
+    background:linear-gradient(120deg, var(--c1), var(--c2) 60%, var(--c3));
+    background-size:200% 100%; transition:all .4s;
   }
-
-  .concurrent-badge {
-    background: rgba(124,135,156,0.12);
-    color: #7C879C;
-    border: 1px solid rgba(124,135,156,0.3);
+  .btn-grad:hover{ background-position:100% 0; box-shadow:0 14px 40px -10px rgba(255,45,149,.6); transform:translateY(-2px); }
+  
+  /* scrollbar */
+  ::-webkit-scrollbar{ width:10px; }
+  ::-webkit-scrollbar-track{ background:#070617; }
+  ::-webkit-scrollbar-thumb{ background:linear-gradient(var(--c1), var(--c2)); border-radius:10px;}
+  
+  /* hero grid bg */
+  .grid-bg{
+    background-image:
+      linear-gradient(rgba(124,58,237,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,58,237,.06) 1px, transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  }
+  
+  /* glowing dot */
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--c6); box-shadow:0 0 12px var(--c6); animation:pulse 1.6s infinite;}
+  @keyframes pulse{ 0%,100%{ opacity:1; transform:scale(1);} 50%{opacity:.4; transform:scale(.7);} }
+  
+  /* badge spin */
+  .spin-slow{ animation:spin 20s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+  
+  /* nav active */
+  .nav-link{ position:relative; }
+  .nav-link::after{
+    content:''; position:absolute; left:0; bottom:-6px; width:0; height:2px;
+    background:linear-gradient(90deg,var(--c1),var(--c3)); transition:width .3s;
+  }
+  .nav-link:hover::after, .nav-link.active::after{ width:100%; }
+  
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
   }
 </style>
 </head>
-<body class="bg-base text-ink font-body grain antialiased">
+<body class="relative">
+
+<!-- 3D background canvas -->
+<canvas id="bg3d"></canvas>
+
+<!-- Aurora blobs -->
+<div class="aurora" style="width:520px; height:520px; background:#ff2d95; top:-120px; left:-120px;"></div>
+<div class="aurora" style="width:480px; height:480px; background:#7c3aed; top:30%; right:-140px; animation-delay:-4s;"></div>
+<div class="aurora" style="width:420px; height:420px; background:#06b6d4; bottom:-120px; left:30%; animation-delay:-8s;"></div>
+
+<!-- Grid overlay -->
+<div class="fixed inset-0 grid-bg pointer-events-none" style="z-index:0;"></div>
 
 <!-- NAV -->
-<nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-base/70 border-b border-white/5">
-  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-    <a href="#top" class="font-display font-semibold text-lg tracking-tight">Anik<span class="text-teal">.</span></a>
-    <div class="hidden md:flex gap-8 text-sm text-muted font-mono">
-      <a href="#experience" class="hover:text-teal transition-colors">experience</a>
-      <a href="#projects" class="hover:text-teal transition-colors">projects</a>
-      <a href="#skills" class="hover:text-teal transition-colors">skills</a>
-      <a href="#contact" class="hover:text-teal transition-colors">contact</a>
-    </div>
-    <a href="mailto:aniklpu01@gmail.com" class="text-sm font-mono border border-teal/40 text-teal px-4 py-1.5 rounded-full hover:bg-teal/10 transition-colors">say hi</a>
-  </div>
-</nav>
+<header class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+  <nav class="nav-pill rounded-full px-3 py-2 flex items-center gap-1 text-sm">
+    <a href="#home" class="px-4 py-2 rounded-full font-medium nav-link active">Home</a>
+    <a href="#about" class="px-4 py-2 rounded-full font-medium nav-link">About</a>
+    <a href="#skills" class="px-4 py-2 rounded-full font-medium nav-link">Skills</a>
+    <a href="#experience" class="px-4 py-2 rounded-full font-medium nav-link">Experience</a>
+    <a href="#projects" class="px-4 py-2 rounded-full font-medium nav-link">Projects</a>
+    <a href="#education" class="px-4 py-2 rounded-full font-medium nav-link">Education</a>
+    <a href="#contact" class="px-4 py-2 rounded-full font-medium btn-grad text-white">Contact</a>
+  </nav>
+</header>
 
 <!-- HERO -->
-<section id="top" class="relative min-h-screen flex items-center overflow-hidden pt-20">
-  <div id="hero-canvas"></div>
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-base/40 to-base z-[1]"></div>
+<section id="home" class="relative min-h-screen flex items-center justify-center px-6 pt-24 pb-16" style="z-index:1;">
+  <div class="max-w-6xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 text-sm font-mono">
+      <span class="dot"></span>
+      <span class="text-cyan-300">Available for opportunities</span>
+    </div>
 
-  <div class="relative z-10 max-w-6xl mx-auto px-6 w-full">
-    <p class="section-eyebrow text-teal mb-5">// AI/ML &amp; DEVOPS ENGINEER — DHAKA, BANGLADESH</p>
-    <h1 class="font-display font-semibold text-5xl md:text-7xl leading-[1.05] max-w-3xl">
-      Md Arifur Rahman Anik
+    <p class="font-mono text-sm tracking-[0.4em] text-pink-300 mb-6 uppercase">AI / ML · DevOps · Python</p>
+    
+    <h1 class="font-display font-black text-5xl sm:text-7xl lg:text-8xl leading-[0.95] mb-6">
+      <span class="block text-white/95">MD ARIFUR RAHMAN</span>
+      <span class="block grad-text">ANIK</span>
     </h1>
-    <p class="mt-6 text-lg md:text-xl text-muted max-w-2xl leading-relaxed">
-      I build the infrastructure between raw data and useful AI — RAG pipelines, vector search clusters,
-      and production ML deployments that hold up under real traffic.
+    
+    <p class="max-w-2xl mx-auto text-lg sm:text-xl text-white/70 mb-10 leading-relaxed">
+      Python Developer & ML–DevOps Engineer crafting <span class="text-cyan-300">scalable ML systems</span>, 
+      <span class="text-pink-300">intelligent APIs</span>, and <span class="text-amber-300">resilient cloud infrastructure</span>.
     </p>
-    <div class="mt-10 flex flex-wrap gap-4">
-      <a href="#experience" class="bg-teal text-base font-medium px-6 py-3 rounded-full hover:bg-teal/90 transition-colors">View experience</a>
-      <a href="https://github.com/anikpy" target="_blank" rel="noopener" class="border border-white/15 px-6 py-3 rounded-full hover:border-teal/50 transition-colors font-mono text-sm flex items-center">github.com/anikpy</a>
+    
+    <div class="flex flex-wrap items-center justify-center gap-4 mb-14">
+      <a href="#projects" class="btn-grad px-7 py-3.5 rounded-full font-semibold text-white flex items-center gap-2">
+        <i class="fa-solid fa-rocket"></i> View Projects
+      </a>
+      <a href="#contact" class="glass glass-hover px-7 py-3.5 rounded-full font-semibold flex items-center gap-2">
+        <i class="fa-solid fa-paper-plane text-pink-300"></i> Get in Touch
+      </a>
     </div>
+    
+    <!-- socials -->
+    <div class="flex items-center justify-center gap-3 text-white/80">
+      <a href="mailto:aniklpu01@gmail.com" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="Email"><i class="fa-solid fa-envelope"></i></a>
+      <a href="https://github.com/anikpy" target="_blank" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/md-arifur-rahman-anik-a32232172/" target="_blank" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="https://anikpy.github.io/MyPortfolio/" target="_blank" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="Portfolio"><i class="fa-solid fa-globe"></i></a>
+      <a href="tel:+8801627220072" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="Phone"><i class="fa-solid fa-phone"></i></a>
+    </div>
+    
+    <div class="mt-16 flex justify-center">
+      <div class="text-xs font-mono text-white/40 animate-bounce">
+        <i class="fa-solid fa-chevron-down"></i> SCROLL
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="mt-16 flex flex-wrap gap-x-10 gap-y-3 font-mono text-xs text-muted">
-      <span><span class="text-ink">3+ yrs</span> production ML/DevOps</span>
-      <span><span class="text-ink">500+</span> sites scraped at scale</span>
-      <span><span class="text-ink">ElasticSearch</span> certified (Udemy)</span>
-    </div>
+<!-- MARQUEE -->
+<section class="relative py-6 border-y border-white/10 overflow-hidden" style="z-index:1; background:rgba(7,6,23,.6);">
+  <div class="marquee whitespace-nowrap font-display text-2xl font-bold">
+    <span class="text-white/30">Python</span><span class="text-pink-400">✦</span>
+    <span class="text-white/30">Django</span><span class="text-cyan-400">✦</span>
+    <span class="text-white/30">LangChain</span><span class="text-violet-400">✦</span>
+    <span class="text-white/30">RAG</span><span class="text-amber-400">✦</span>
+    <span class="text-white/30">Kubernetes</span><span class="text-lime-400">✦</span>
+    <span class="text-white/30">Docker</span><span class="text-pink-400">✦</span>
+    <span class="text-white/30">TensorFlow</span><span class="text-cyan-400">✦</span>
+    <span class="text-white/30">Elasticsearch</span><span class="text-violet-400">✦</span>
+    <span class="text-white/30">FastAPI</span><span class="text-amber-400">✦</span>
+    <span class="text-white/30">PyTorch</span><span class="text-lime-400">✦</span>
+    <span class="text-white/30">Python</span><span class="text-pink-400">✦</span>
+    <span class="text-white/30">Django</span><span class="text-cyan-400">✦</span>
+    <span class="text-white/30">LangChain</span><span class="text-violet-400">✦</span>
+    <span class="text-white/30">RAG</span><span class="text-amber-400">✦</span>
+    <span class="text-white/30">Kubernetes</span><span class="text-lime-400">✦</span>
+    <span class="text-white/30">Docker</span><span class="text-pink-400">✦</span>
+    <span class="text-white/30">TensorFlow</span><span class="text-cyan-400">✦</span>
+    <span class="text-white/30">Elasticsearch</span><span class="text-violet-400">✦</span>
+    <span class="text-white/30">FastAPI</span><span class="text-amber-400">✦</span>
+    <span class="text-white/30">PyTorch</span><span class="text-lime-400">✦</span>
   </div>
 </section>
 
 <!-- ABOUT -->
-<section class="relative z-10 py-24 border-t border-white/5">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="grid md:grid-cols-12 gap-10 fade-up">
-      <div class="md:col-span-4">
-        <p class="section-eyebrow text-teal mb-3">// ABOUT</p>
-        <h2 class="font-display text-3xl font-semibold">What I do</h2>
-      </div>
-      <div class="md:col-span-8 text-muted text-lg leading-relaxed space-y-4">
-        <p>Python developer and ML–DevOps engineer focused on shipping machine learning systems that
-        actually run in production — not just notebooks. Recent work centers on retrieval-augmented
-        generation, semantic search over ElasticSearch clusters, and deploying open-weight LLMs
-        (gpt-oss, Gemma, LLaMA2) behind Nginx on real infrastructure.</p>
-        <p>On the DevOps side: Docker, Kubernetes, Jenkins, ArgoCD, and Terraform for CI/CD and
-        containerized deployment — the discipline that keeps ML systems reliable once they leave
-        the experiment stage.</p>
-      </div>
+<section id="about" class="relative py-28 px-6" style="z-index:1;">
+  <div class="max-w-6xl mx-auto">
+    <div class="reveal flex items-center gap-4 mb-14">
+      <span class="font-mono text-sm text-pink-300">01 //</span>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold">About <span class="grad-text">Me</span></h2>
+      <div class="flex-1 h-px bg-gradient-to-r from-pink-500/50 to-transparent"></div>
     </div>
-  </div>
-</section>
-
-<!-- EXPERIENCE -->
-<section id="experience" class="relative z-10 py-24 border-t border-white/5">
-  <div class="max-w-6xl mx-auto px-6">
-    <p class="section-eyebrow text-teal mb-3 fade-up">// EXPERIENCE</p>
-    <h2 class="font-display text-3xl md:text-4xl font-semibold mb-16 fade-up">Career timeline</h2>
-
-    <div class="relative pl-8 md:pl-10">
-      <div class="absolute left-[3px] md:left-[5px] top-2 bottom-2 w-px timeline-line"></div>
-
-      <!-- Nitol Niloy -->
-      <div class="relative mb-14 fade-up">
-        <div class="absolute -left-8 md:-left-10 top-1.5 w-2.5 h-2.5 rounded-full bg-amber ring-4 ring-amber/20"></div>
-        <div class="flex flex-wrap items-center gap-3 mb-1">
-          <h3 class="font-display text-xl font-semibold">Senior Officer, IT</h3>
-          <span class="current-badge text-xs font-mono px-2.5 py-0.5 rounded-full">current</span>
+    
+    <div class="grid lg:grid-cols-5 gap-8 items-start">
+      <!-- profile card -->
+      <div class="lg:col-span-2 reveal">
+        <div class="glass rounded-3xl p-8 relative overflow-hidden">
+          <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-br from-pink-500/30 to-violet-500/30 blur-2xl"></div>
+          <div class="relative">
+            <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-pink-500 via-violet-500 to-cyan-400 p-[2px] mb-6 spin-slow">
+              <div class="w-full h-full rounded-2xl bg-[#0d0a2c] flex items-center justify-center font-display text-3xl font-black">A</div>
+            </div>
+            <h3 class="font-display text-2xl font-bold">Md Arifur Rahman Anik</h3>
+            <p class="text-cyan-300 font-mono text-sm mb-6">Python Developer · ML-DevOps</p>
+            
+            <div class="space-y-3 text-sm">
+              <div class="flex items-start gap-3"><i class="fa-solid fa-location-dot text-pink-400 mt-1"></i><span class="text-white/75">Nikunja 2, Dhaka, Bangladesh</span></div>
+              <div class="flex items-start gap-3"><i class="fa-solid fa-envelope text-pink-400 mt-1"></i><span class="text-white/75">aniklpu01@gmail.com</span></div>
+              <div class="flex items-start gap-3"><i class="fa-solid fa-phone text-pink-400 mt-1"></i><span class="text-white/75">+880 1627 220072</span></div>
+              <div class="flex items-start gap-3"><i class="fa-solid fa-briefcase text-pink-400 mt-1"></i><span class="text-white/75">3+ Years Experience</span></div>
+            </div>
+            
+            <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-3 gap-3 text-center">
+              <div>
+                <div class="font-display text-2xl font-bold grad-text">3+</div>
+                <div class="text-xs text-white/50">Years</div>
+              </div>
+              <div>
+                <div class="font-display text-2xl font-bold grad-text">14+</div>
+                <div class="text-xs text-white/50">Projects</div>
+              </div>
+              <div>
+                <div class="font-display text-2xl font-bold grad-text">50+</div>
+                <div class="text-xs text-white/50">Apps Deployed</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <p class="text-teal font-mono text-sm mb-2">Nitol Niloy Group · Jul 2026 — Present</p>
-        <p class="text-muted leading-relaxed max-w-2xl">
-          Recently joined Nitol Niloy Group's IT function as a Senior Officer. Full scope and
-          projects are still taking shape in the first weeks on the job — this section will
-          expand as the work develops.
+      </div>
+      
+      <!-- bio -->
+      <div class="lg:col-span-3 reveal space-y-6">
+        <p class="text-lg sm:text-xl text-white/80 leading-relaxed">
+          I'm a <span class="text-pink-300 font-semibold">Python Developer and ML–DevOps Engineer</span> with experience 
+          building <span class="text-cyan-300 font-semibold">scalable machine learning systems</span> and automating 
+          cloud-based deployments. I specialize in developing intelligent APIs, managing CI/CD pipelines, 
+          and deploying AI models into production environments.
         </p>
-      </div>
-
-      <!-- Jobdesk -->
-      <div class="relative mb-14 fade-up">
-        <div class="absolute -left-8 md:-left-10 top-1.5 w-2.5 h-2.5 rounded-full bg-teal ring-4 ring-teal/20"></div>
-        <h3 class="font-display text-xl font-semibold mb-1">Python Developer</h3>
-        <p class="text-teal font-mono text-sm mb-4">Jobdesk Ltd, Uttara · Oct 2023 — Jun 2026</p>
-        <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
-          <div class="glow-border bg-surface rounded-xl p-5">
-            <p class="font-medium mb-1.5">Candidate Search with gpt-oss RAG</p>
-            <p class="text-sm text-muted leading-relaxed">Built and deployed a RAG-based model using gpt-oss to match CVs against job descriptions and retrieve top candidates.</p>
-          </div>
-          <div class="glow-border bg-surface rounded-xl p-5">
-            <p class="font-medium mb-1.5">ElasticSearch Cluster (3 nodes)</p>
-            <p class="text-sm text-muted leading-relaxed">Deployed a 3-node cluster storing vector-embedded data with custom-keyword semantic search, ingested via a Python API on Nginx.</p>
-          </div>
-          <div class="glow-border bg-surface rounded-xl p-5">
-            <p class="font-medium mb-1.5">Ollama (gpt-oss:20b) on vast.ai</p>
-            <p class="text-sm text-muted leading-relaxed">Deployed an Ollama-based model in production to extract skills and structured data from CVs.</p>
-          </div>
-          <div class="glow-border bg-surface rounded-xl p-5">
-            <p class="font-medium mb-1.5">Gemma 4B for Image Explanation</p>
-            <p class="text-sm text-muted leading-relaxed">Deployed Gemma 4B in production to read images and generate natural-language explanations.</p>
-          </div>
-          <div class="glow-border bg-surface rounded-xl p-5">
-            <p class="font-medium mb-1.5">Gmail Automation via n8n</p>
-            <p class="text-sm text-muted leading-relaxed">Deployed an n8n instance to automate Gmail workflows for candidate communication.</p>
-          </div>
-          <div class="glow-border bg-surface rounded-xl p-5">
-            <p class="font-medium mb-1.5">Scalable Web Scraping Engine</p>
-            <p class="text-sm text-muted leading-relaxed">Scrapy + Selenium engine on Nginx processing structured and unstructured data from 500+ sites.</p>
-          </div>
-          <div class="glow-border bg-surface rounded-xl p-5">
-            <p class="font-medium mb-1.5">CI/CD &amp; Container Orchestration</p>
-            <p class="text-sm text-muted leading-relaxed">Built Jenkins + Docker pipelines and managed Kubernetes clusters for consistent, scalable releases.</p>
-          </div>
-          <div class="glow-border bg-surface rounded-xl p-5">
-            <p class="font-medium mb-1.5">Document Processing API Suite</p>
-            <p class="text-sm text-muted leading-relaxed">PDF merger, image extractor, and text extractor APIs to streamline document workflows in production.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- JobXprss -->
-      <div class="relative mb-14 fade-up">
-        <div class="absolute -left-8 md:-left-10 top-1.5 w-2.5 h-2.5 rounded-full bg-muted ring-4 ring-white/5"></div>
-        <div class="flex flex-wrap items-center gap-3 mb-1">
-          <h3 class="font-display text-xl font-semibold">Junior Machine Learning Engineer</h3>
-          <span class="concurrent-badge text-xs font-mono px-2.5 py-0.5 rounded-full">concurrent role</span>
-        </div>
-        <p class="text-teal font-mono text-sm mb-3">JobXprss Limited, Gulshan-1 · Nov 2022 — May 2023</p>
-        <p class="text-muted leading-relaxed max-w-2xl">
-          Automated an e-commerce platform by scraping 15,000 product listings and syncing to a
-          WordPress instance. Built Selenium/Scrapy + API workflows for high-volume job data
-          extraction across diverse sites, managing end-to-end scraping projects with quality control.
+        <p class="text-base text-white/60 leading-relaxed">
+          Passionate about delivering solutions that combine data-driven insights with reliable, maintainable 
+          infrastructure. From fine-tuning LLMs to orchestrating Kubernetes clusters — I bridge the gap between 
+          research and production.
         </p>
-      </div>
-
-      <!-- Ishraaq -->
-      <div class="relative fade-up">
-        <div class="absolute -left-8 md:-left-10 top-1.5 w-2.5 h-2.5 rounded-full bg-muted ring-4 ring-white/5"></div>
-        <div class="flex flex-wrap items-center gap-3 mb-1">
-          <h3 class="font-display text-xl font-semibold">Junior Machine Learning Engineer (Intern)</h3>
-          <span class="concurrent-badge text-xs font-mono px-2.5 py-0.5 rounded-full">concurrent role</span>
-        </div>
-        <p class="text-teal font-mono text-sm mb-3">Ishraaq Solutions Limited, Gulshan-1 · Nov 2021 — May 2023</p>
-        <p class="text-muted leading-relaxed max-w-2xl">
-          Hands-on computer vision work: trained and fine-tuned models for image detection and
-          processing, improving object recognition accuracy for automated visual inspection,
-          alongside a team of experienced engineers.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects" class="relative z-10 py-24 border-t border-white/5">
-  <div class="max-w-6xl mx-auto px-6">
-    <p class="section-eyebrow text-teal mb-3 fade-up">// SELECTED WORK</p>
-    <h2 class="font-display text-3xl md:text-4xl font-semibold mb-16 fade-up">Projects</h2>
-
-    <div id="project-grid" class="grid md:grid-cols-2 gap-6">
-      <!-- cards injected with tilt via JS class, content static -->
-      <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-amber mb-3">RAG / SEARCH</p>
-        <h3 class="font-display text-xl font-semibold mb-2">RAG Candidate Matching</h3>
-        <p class="text-muted text-sm leading-relaxed mb-4">gpt-oss powered retrieval system matching CVs to job descriptions, tuned for retrieval quality over raw keyword match.</p>
-        <div class="flex flex-wrap gap-2">
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">gpt-oss</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">ElasticSearch</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Python</span>
-        </div>
-      </div>
-
-      <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-orange mb-3">INFRA / SEARCH</p>
-        <h3 class="font-display text-xl font-semibold mb-2">3-Node ElasticSearch Cluster</h3>
-        <p class="text-muted text-sm leading-relaxed mb-4">Vector-embedded bulk data store with semantic search and a custom-keyword layer, served through a Python ingestion API on Nginx.</p>
-        <div class="flex flex-wrap gap-2">
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Gunicorn</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Kibana</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Nginx</span>
-        </div>
-      </div>
-
-      <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-amber mb-3">LLM DEPLOYMENT</p>
-        <h3 class="font-display text-xl font-semibold mb-2">Ollama Model Hosting</h3>
-        <p class="text-muted text-sm leading-relaxed mb-4">Deployed gpt-oss:20b on vast.ai and LLaMA2 on Nginx for production CV skill extraction and job description generation.</p>
-        <div class="flex flex-wrap gap-2">
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Ollama</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">vast.ai</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">DevOps</span>
-        </div>
-      </div>
-
-      <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-orange mb-3">MULTIMODAL</p>
-        <h3 class="font-display text-xl font-semibold mb-2">Gemma 4B Image Explainer</h3>
-        <p class="text-muted text-sm leading-relaxed mb-4">Production deployment of Gemma 4B for reading images and generating natural-language explanations at scale.</p>
-        <div class="flex flex-wrap gap-2">
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Gemma</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Ollama</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Nginx</span>
-        </div>
-      </div>
-
-      <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-amber mb-3">DATA ENGINEERING</p>
-        <h3 class="font-display text-xl font-semibold mb-2">Scalable Web Scraping Engine</h3>
-        <p class="text-muted text-sm leading-relaxed mb-4">Scrapy + Selenium engine processing structured and unstructured data from 500+ websites for high-volume, multi-source gathering.</p>
-        <div class="flex flex-wrap gap-2">
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Scrapy</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Selenium</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Nginx</span>
-        </div>
-      </div>
-
-      <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-orange mb-3">AUTOMATION</p>
-        <h3 class="font-display text-xl font-semibold mb-2">n8n Gmail Automation</h3>
-        <p class="text-muted text-sm leading-relaxed mb-4">Deployed an n8n instance automating candidate-facing Gmail workflows end to end.</p>
-        <div class="flex flex-wrap gap-2">
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">n8n</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Gmail API</span>
-        </div>
-      </div>
-
-      <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-amber mb-3">DEVOPS</p>
-        <h3 class="font-display text-xl font-semibold mb-2">CI/CD &amp; Kubernetes Orchestration</h3>
-        <p class="text-muted text-sm leading-relaxed mb-4">Jenkins + Docker pipelines automating build and release; managed Kubernetes clusters orchestrating containers across 50+ deployed applications.</p>
-        <div class="flex flex-wrap gap-2">
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Jenkins</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Docker</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Kubernetes</span>
-        </div>
-      </div>
-
-      <div class="tilt-card glow-border bg-surface rounded-2xl p-7">
-        <p class="section-eyebrow text-orange mb-3">TOOLING</p>
-        <h3 class="font-display text-xl font-semibold mb-2">Document Processing API Suite</h3>
-        <p class="text-muted text-sm leading-relaxed mb-4">PDF merger, image extractor, and text extractor APIs designed to streamline document workflows in production.</p>
-        <div class="flex flex-wrap gap-2">
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">Python</span>
-          <span class="text-xs px-2.5 py-1 rounded-full border border-white/10 skill-chip">PDF libs</span>
+        
+        <div class="grid sm:grid-cols-2 gap-4 pt-4">
+          <div class="glass glass-hover rounded-2xl p-5">
+            <i class="fa-solid fa-brain text-2xl text-pink-400 mb-3"></i>
+            <h4 class="font-semibold mb-1">AI / ML Engineering</h4>
+            <p class="text-sm text-white/60">LLMs, RAG, BERT, fine-tuning, vector search & NLP pipelines.</p>
+          </div>
+          <div class="glass glass-hover rounded-2xl p-5">
+            <i class="fa-solid fa-server text-2xl text-cyan-400 mb-3"></i>
+            <h4 class="font-semibold mb-1">DevOps & Infra</h4>
+            <p class="text-sm text-white/60">Docker, K8s, Jenkins, ArgoCD, Nginx, CI/CD automation.</p>
+          </div>
+          <div class="glass glass-hover rounded-2xl p-5">
+            <i class="fa-solid fa-code text-2xl text-violet-400 mb-3"></i>
+            <h4 class="font-semibold mb-1">Backend & APIs</h4>
+            <p class="text-sm text-white/60">Django REST, FastAPI, Flask, Streamlit, microservices.</p>
+          </div>
+          <div class="glass glass-hover rounded-2xl p-5">
+            <i class="fa-solid fa-database text-2xl text-amber-400 mb-3"></i>
+            <h4 class="font-semibold mb-1">Data & Search</h4>
+            <p class="text-sm text-white/60">Elasticsearch, FAISS, Pinecone, PostgreSQL, ETL/ELT.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -374,212 +353,626 @@
 </section>
 
 <!-- SKILLS -->
-<section id="skills" class="relative z-10 py-24 border-t border-white/5">
-  <div class="max-w-6xl mx-auto px-6">
-    <p class="section-eyebrow text-teal mb-3 fade-up">// TOOLBOX</p>
-    <h2 class="font-display text-3xl md:text-4xl font-semibold mb-16 fade-up">Skills &amp; stack</h2>
-
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 fade-up">
-      <div>
-        <p class="font-display font-semibold mb-4 text-teal">AI / ML</p>
+<section id="skills" class="relative py-28 px-6" style="z-index:1;">
+  <div class="max-w-6xl mx-auto">
+    <div class="reveal flex items-center gap-4 mb-14">
+      <span class="font-mono text-sm text-cyan-300">02 //</span>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold">Tech <span class="grad-text">Arsenal</span></h2>
+      <div class="flex-1 h-px bg-gradient-to-r from-cyan-500/50 to-transparent"></div>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Programming -->
+      <div class="reveal glass glass-hover rounded-3xl p-7">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center"><i class="fa-solid fa-code text-white"></i></div>
+          <h3 class="font-display text-xl font-bold">Programming & AI</h3>
+        </div>
         <div class="flex flex-wrap gap-2">
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Python</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">LangChain</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">LangGraph</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">RAG</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">LLM Fine-Tuning</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">FAISS</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Pinecone</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">TensorFlow</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">PyTorch</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">BERT / NLP</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">OpenCV</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Python</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Django</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">LangChain</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">LangGraph</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">RAG</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">LLM Fine-Tuning</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Vector Embedding</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">FAISS</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Pinecone</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">ELK</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Agentic AI</span>
         </div>
       </div>
-      <div>
-        <p class="font-display font-semibold mb-4 text-teal">APIs &amp; Data</p>
+      
+      <!-- Frameworks -->
+      <div class="reveal glass glass-hover rounded-3xl p-7">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center"><i class="fa-solid fa-layer-group text-white"></i></div>
+          <h3 class="font-display text-xl font-bold">Frameworks & ML</h3>
+        </div>
         <div class="flex flex-wrap gap-2">
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Django REST</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">FastAPI</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Flask</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Streamlit</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">ElasticSearch</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">PostgreSQL</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">ETL/ELT</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Scrapy</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Selenium</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">TensorFlow</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Keras</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">PyTorch</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Scikit-Learn</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">BERT</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">LLM</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">NLP</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Predictive Analytics</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">OpenCV</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Selenium</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Scrapy</span>
         </div>
       </div>
-      <div>
-        <p class="font-display font-semibold mb-4 text-teal">DevOps / Infra</p>
+      
+      <!-- ML Models -->
+      <div class="reveal glass glass-hover rounded-3xl p-7">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i class="fa-solid fa-chart-line text-white"></i></div>
+          <h3 class="font-display text-xl font-bold">ML Models</h3>
+        </div>
         <div class="flex flex-wrap gap-2">
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Docker</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Kubernetes</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Jenkins</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">ArgoCD</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Terraform</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Nginx</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Git</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">n8n</span>
-          <span class="skill-chip text-xs px-3 py-1.5 rounded-full border border-white/10">Redis</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Text Classification</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Data Preprocessing</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Feature Engineering</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Model Evaluation</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Image Detection</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Fine-tuning</span>
+        </div>
+      </div>
+      
+      <!-- API & DB -->
+      <div class="reveal glass glass-hover rounded-3xl p-7">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"><i class="fa-solid fa-plug text-white"></i></div>
+          <h3 class="font-display text-xl font-bold">APIs & Databases</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Django REST</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">FastAPI</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Flask</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Streamlit</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Elasticsearch</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">PostgreSQL</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Redis</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">ETL / ELT</span>
+        </div>
+      </div>
+      
+      <!-- DevOps -->
+      <div class="reveal glass glass-hover rounded-3xl p-7">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center"><i class="fa-solid fa-gears text-white"></i></div>
+          <h3 class="font-display text-xl font-bold">DevOps & Infra</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Docker</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Kubernetes</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Nginx</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">CI/CD</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Jenkins</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">ArgoCD</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Terraform</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Git</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Load Balancing</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Monitoring</span>
+        </div>
+      </div>
+      
+      <!-- Automation -->
+      <div class="reveal glass glass-hover rounded-3xl p-7">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-lime-500 to-green-600 flex items-center justify-center"><i class="fa-solid fa-robot text-white"></i></div>
+          <h3 class="font-display text-xl font-bold">Automation</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="chip px-3 py-1.5 rounded-full text-sm">n8n</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Selenium</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Scrapy</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Gmail Automation</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Web Scraping</span>
+          <span class="chip px-3 py-1.5 rounded-full text-sm">Workflow Engine</span>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="mt-16 grid sm:grid-cols-2 gap-8 fade-up">
-      <div class="glow-border bg-surface rounded-2xl p-6">
-        <p class="section-eyebrow text-amber mb-2">EDUCATION</p>
-        <p class="font-medium">B.Sc. Computer Science &amp; Engineering</p>
-        <p class="text-muted text-sm mt-1">Lovely Professional University, Punjab, India — Major: Machine Learning · CGPA 7.15 · 2022</p>
+<!-- EXPERIENCE -->
+<section id="experience" class="relative py-28 px-6" style="z-index:1;">
+  <div class="max-w-5xl mx-auto">
+    <div class="reveal flex items-center gap-4 mb-14">
+      <span class="font-mono text-sm text-violet-300">03 //</span>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold">Professional <span class="grad-text">Journey</span></h2>
+      <div class="flex-1 h-px bg-gradient-to-r from-violet-500/50 to-transparent"></div>
+    </div>
+    
+    <div class="relative pl-8 sm:pl-12">
+      <!-- vertical line -->
+      <div class="absolute left-2 sm:left-4 top-2 bottom-2 w-[2px] tl-line"></div>
+      
+      <!-- Jobdesk -->
+      <div class="reveal relative mb-14">
+        <div class="absolute -left-[26px] sm:-left-[34px] top-2 w-4 h-4 rounded-full bg-pink-500 ring-4 ring-pink-500/30"></div>
+        <div class="glass glass-hover rounded-3xl p-7">
+          <div class="flex flex-wrap justify-between items-start gap-3 mb-4">
+            <div>
+              <span class="inline-block text-xs font-mono px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 mb-2">CURRENT</span>
+              <h3 class="font-display text-2xl font-bold">Python Developer</h3>
+              <p class="text-cyan-300">Jobdesk Ltd, Uttara — Dhaka</p>
+            </div>
+            <div class="text-right">
+              <p class="font-mono text-sm text-amber-300">Oct 2023 — Present</p>
+              <p class="text-xs text-white/50">1.5+ years</p>
+            </div>
+          </div>
+          <ul class="space-y-2 text-sm text-white/70 list-none">
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Deployed Ollama-based ML models (gpt-oss:20b, LLAMA2, Gemma 4B) in production via Nginx with DevOps pipelines.</li>
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Built RAG-based candidate search using gpt-oss + Elasticsearch for CV-to-job matching.</li>
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Established CI/CD with Jenkins + Docker; managed Kubernetes clusters for scalable deployments.</li>
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Deployed 50+ applications across Nginx, Apache, K8s and Ingress with optimized load balancing.</li>
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Integrated Redis caching, Elasticsearch clusters, and automated workflows with n8n.</li>
+          </ul>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Python</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">RAG</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Kubernetes</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Elasticsearch</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Nginx</span>
+          </div>
+        </div>
       </div>
-      <div class="glow-border bg-surface rounded-2xl p-6">
-        <p class="section-eyebrow text-amber mb-2">CERTIFICATION</p>
-        <p class="font-medium">ElasticSearch 8</p>
-        <p class="text-muted text-sm mt-1">Udemy · plus IELTS 6.0 (British Council)</p>
+      
+      <!-- Ishraak -->
+      <div class="reveal relative">
+        <div class="absolute -left-[26px] sm:-left-[34px] top-2 w-4 h-4 rounded-full bg-cyan-400 ring-4 ring-cyan-400/30"></div>
+        <div class="glass glass-hover rounded-3xl p-7">
+          <div class="flex flex-wrap justify-between items-start gap-3 mb-4">
+            <div>
+              <span class="inline-block text-xs font-mono px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 mb-2">INTERNSHIP</span>
+              <h3 class="font-display text-2xl font-bold">Junior Machine Learning Engineer</h3>
+              <p class="text-cyan-300">Ishraak Solutions Limited — Gulshan-1, Dhaka</p>
+            </div>
+            <div class="text-right">
+              <p class="font-mono text-sm text-amber-300">Nov 2021 — May 2023</p>
+              <p class="text-xs text-white/50">1.5 years</p>
+            </div>
+          </div>
+          <ul class="space-y-2 text-sm text-white/70 list-none">
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Gained hands-on experience in computer vision — training and fine-tuning ML models for image detection & processing.</li>
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Developed image detection models that enhanced object recognition accuracy for automated visual inspection.</li>
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Automated e-commerce scraping of 15,000 product listings from Startech to WordPress.</li>
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Managed end-to-end data scraping projects with Selenium, Scrapy & API integrations.</li>
+            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Collaborated with senior engineers on model optimization and scalable deployments.</li>
+          </ul>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Computer Vision</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">TensorFlow</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">OpenCV</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Scrapy</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Selenium</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="relative py-28 px-6" style="z-index:1;">
+  <div class="max-w-7xl mx-auto">
+    <div class="reveal flex items-center gap-4 mb-14">
+      <span class="font-mono text-sm text-amber-300">04 //</span>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold">Featured <span class="grad-text">Projects</span></h2>
+      <div class="flex-1 h-px bg-gradient-to-r from-amber-500/50 to-transparent"></div>
+    </div>
+    
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsGrid"></div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education" class="relative py-28 px-6" style="z-index:1;">
+  <div class="max-w-6xl mx-auto">
+    <div class="reveal flex items-center gap-4 mb-14">
+      <span class="font-mono text-sm text-lime-300">05 //</span>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold">Education & <span class="grad-text">Achievements</span></h2>
+      <div class="flex-1 h-px bg-gradient-to-r from-lime-500/50 to-transparent"></div>
+    </div>
+    
+    <div class="grid lg:grid-cols-3 gap-6 mb-10">
+      <div class="reveal glass glass-hover rounded-3xl p-7">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-white text-xl"></i></div>
+          <span class="text-xs font-mono text-white/50">2022</span>
+        </div>
+        <h3 class="font-display text-lg font-bold mb-1">Lovely Professional University</h3>
+        <p class="text-cyan-300 text-sm mb-3">Punjab, India</p>
+        <p class="text-sm text-white/70">B.Tech · Computer Science & Engineering</p>
+        <p class="text-sm text-white/70">Major: Machine Learning</p>
+        <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-sm">
+          <span class="text-white/50">CGPA</span><span class="font-mono text-pink-300 font-bold">7.15 / 10</span>
+        </div>
+        <div class="flex justify-between text-sm mt-2">
+          <span class="text-white/50">Credits</span><span class="font-mono text-white/80">160</span>
+        </div>
+      </div>
+      
+      <div class="reveal glass glass-hover rounded-3xl p-7">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i class="fa-solid fa-school text-white text-xl"></i></div>
+          <span class="text-xs font-mono text-white/50">2017</span>
+        </div>
+        <h3 class="font-display text-lg font-bold mb-1">Cantonment Public School & College</h3>
+        <p class="text-cyan-300 text-sm mb-3">Mymensingh</p>
+        <p class="text-sm text-white/70">Higher Secondary · Science</p>
+        <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-sm">
+          <span class="text-white/50">GPA</span><span class="font-mono text-pink-300 font-bold">4.67 / 5</span>
+        </div>
+      </div>
+      
+      <div class="reveal glass glass-hover rounded-3xl p-7">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"><i class="fa-solid fa-building-columns text-white text-xl"></i></div>
+          <span class="text-xs font-mono text-white/50">2015</span>
+        </div>
+        <h3 class="font-display text-lg font-bold mb-1">Kendua Joy Hari Spry Govt. High School</h3>
+        <p class="text-cyan-300 text-sm mb-3">Kendua, Netrokona</p>
+        <p class="text-sm text-white/70">Secondary · Science</p>
+        <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-sm">
+          <span class="text-white/50">GPA</span><span class="font-mono text-pink-300 font-bold">4.72 / 5</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Achievements -->
+    <div class="reveal grid sm:grid-cols-2 gap-6">
+      <div class="glass glass-hover rounded-3xl p-7 flex items-center gap-5">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-3xl shrink-0">
+          <i class="fa-solid fa-language text-white"></i>
+        </div>
+        <div>
+          <h4 class="font-display text-lg font-bold">IELTS · 6.0</h4>
+          <p class="text-sm text-white/60">British Council Certification</p>
+        </div>
+      </div>
+      <div class="glass glass-hover rounded-3xl p-7 flex items-center gap-5">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-3xl shrink-0">
+          <i class="fa-solid fa-certificate text-white"></i>
+        </div>
+        <div>
+          <h4 class="font-display text-lg font-bold">Elasticsearch 8</h4>
+          <p class="text-sm text-white/60">Certified from Udemy</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="relative z-10 py-28 border-t border-white/5">
-  <div class="max-w-6xl mx-auto px-6 text-center fade-up">
-    <p class="section-eyebrow text-teal mb-4">// GET IN TOUCH</p>
-    <h2 class="font-display text-4xl md:text-5xl font-semibold mb-6">Let's build something<br class="hidden md:block"> that ships.</h2>
-    <p class="text-muted max-w-xl mx-auto mb-10">Based in Dhaka, Bangladesh. Open to conversations about ML infrastructure, RAG systems, and DevOps.</p>
-    <div class="flex flex-wrap justify-center gap-4">
-      <a href="mailto:aniklpu01@gmail.com" class="bg-teal text-base font-medium px-6 py-3 rounded-full hover:bg-teal/90 transition-colors">aniklpu01@gmail.com</a>
-      <a href="https://github.com/anikpy" target="_blank" rel="noopener" class="border border-white/15 px-6 py-3 rounded-full hover:border-teal/50 transition-colors font-mono text-sm">GitHub</a>
-      <a href="https://www.linkedin.com/in/md-arifur-rahman-anik-a32232172/" target="_blank" rel="noopener" class="border border-white/15 px-6 py-3 rounded-full hover:border-teal/50 transition-colors font-mono text-sm">LinkedIn</a>
+<section id="contact" class="relative py-28 px-6" style="z-index:1;">
+  <div class="max-w-5xl mx-auto">
+    <div class="reveal flex items-center gap-4 mb-14">
+      <span class="font-mono text-sm text-pink-300">06 //</span>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold">Let's <span class="grad-text">Connect</span></h2>
+      <div class="flex-1 h-px bg-gradient-to-r from-pink-500/50 to-transparent"></div>
+    </div>
+    
+    <div class="grid lg:grid-cols-2 gap-8">
+      <!-- left -->
+      <div class="reveal space-y-6">
+        <h3 class="font-display text-3xl sm:text-4xl font-bold leading-tight">
+          Have a project in mind? <br><span class="grad-text">Let's build it together.</span>
+        </h3>
+        <p class="text-white/65">Whether it's deploying ML models at scale, building intelligent APIs, or automating your infrastructure — I'm always open to discussing new opportunities and challenges.</p>
+        
+        <div class="space-y-3 pt-4">
+          <a href="mailto:aniklpu01@gmail.com" class="glass glass-hover rounded-2xl p-4 flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center"><i class="fa-solid fa-envelope text-white"></i></div>
+            <div class="flex-1"><div class="text-xs text-white/50 font-mono">EMAIL</div><div class="font-medium">aniklpu01@gmail.com</div></div>
+            <i class="fa-solid fa-arrow-right text-pink-300 group-hover:translate-x-1 transition"></i>
+          </a>
+          <a href="tel:+8801627220072" class="glass glass-hover rounded-2xl p-4 flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i class="fa-solid fa-phone text-white"></i></div>
+            <div class="flex-1"><div class="text-xs text-white/50 font-mono">PHONE</div><div class="font-medium">+880 1627 220072</div></div>
+            <i class="fa-solid fa-arrow-right text-cyan-300 group-hover:translate-x-1 transition"></i>
+          </a>
+          <div class="glass rounded-2xl p-4 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"><i class="fa-solid fa-location-dot text-white"></i></div>
+            <div class="flex-1"><div class="text-xs text-white/50 font-mono">LOCATION</div><div class="font-medium">Nikunja 2, Dhaka, Bangladesh</div></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- form -->
+      <form id="contactForm" class="reveal glass rounded-3xl p-7 space-y-4">
+        <div>
+          <label class="text-xs font-mono text-white/50 mb-1.5 block">YOUR NAME</label>
+          <input required type="text" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500/60 focus:bg-white/10 transition" placeholder="John Doe">
+        </div>
+        <div>
+          <label class="text-xs font-mono text-white/50 mb-1.5 block">YOUR EMAIL</label>
+          <input required type="email" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500/60 focus:bg-white/10 transition" placeholder="john@example.com">
+        </div>
+        <div>
+          <label class="text-xs font-mono text-white/50 mb-1.5 block">MESSAGE</label>
+          <textarea required rows="4" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500/60 focus:bg-white/10 transition resize-none" placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button type="submit" class="btn-grad w-full py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i> Send Message
+        </button>
+        <p id="formMsg" class="text-center text-sm text-cyan-300 hidden">Thanks! I'll get back to you soon. <i class="fa-solid fa-check-circle"></i></p>
+      </form>
     </div>
   </div>
 </section>
 
-<footer class="relative z-10 border-t border-white/5 py-8 text-center text-muted text-xs font-mono">
-  © 2026 Md Arifur Rahman Anik — Dhaka, Bangladesh
+<!-- FOOTER -->
+<footer class="relative py-10 px-6 border-t border-white/10" style="z-index:1; background:rgba(7,6,23,.6);">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 via-violet-500 to-cyan-400 flex items-center justify-center font-display font-black">A</div>
+      <div>
+        <div class="font-display font-bold">Md Arifur Rahman Anik</div>
+        <div class="text-xs text-white/50 font-mono">AI/ML & DevOps Engineer</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3 text-white/80">
+      <a href="https://github.com/anikpy" target="_blank" class="w-10 h-10 rounded-full glass glass-hover flex items-center justify-center"><i class="fa-brands fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/md-arifur-rahman-anik-a32232172/" target="_blank" class="w-10 h-10 rounded-full glass glass-hover flex items-center justify-center"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="mailto:aniklpu01@gmail.com" class="w-10 h-10 rounded-full glass glass-hover flex items-center justify-center"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+    <p class="text-xs text-white/40 font-mono">© 2025 — Designed with <i class="fa-solid fa-heart text-pink-400"></i> & Three.js</p>
+  </div>
 </footer>
 
-<script>
-  // ---- Hero: Three.js vector-embedding node graph ----
-  (function() {
-    const container = document.getElementById('hero-canvas');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
-    camera.position.z = 34;
+<!-- ============ SCRIPTS ============ -->
+<script type="module">
+import * as THREE from 'three';
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
+/* ---------- 3D background: floating geometric shapes ---------- */
+const canvas = document.getElementById('bg3d');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const NODE_COUNT = 70;
-    const nodes = [];
-    const nodeGeo = new THREE.SphereGeometry(0.18, 8, 8);
-    const nodeMatLime = new THREE.MeshBasicMaterial({ color: 0xC6F135, transparent: true, opacity: 0.85 });
-    const nodeMatYellow = new THREE.MeshBasicMaterial({ color: 0xFFD23F, transparent: true, opacity: 0.85 });
-    const nodeMatOrange = new THREE.MeshBasicMaterial({ color: 0xFF8A3D, transparent: true, opacity: 0.85 });
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.z = 8;
 
-    const group = new THREE.Group();
-    scene.add(group);
+// Lights
+const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambient);
+const dir1 = new THREE.DirectionalLight(0xff2d95, 1.2); dir1.position.set(5,5,5); scene.add(dir1);
+const dir2 = new THREE.DirectionalLight(0x06b6d4, 1.0); dir2.position.set(-5,-3,3); scene.add(dir2);
+const dir3 = new THREE.DirectionalLight(0xf59e0b, 0.6); dir3.position.set(0,5,-3); scene.add(dir3);
 
-    for (let i = 0; i < NODE_COUNT; i++) {
-      const r = Math.random();
-      const mat = r > 0.88 ? nodeMatOrange : (r > 0.65 ? nodeMatYellow : nodeMatLime);
-      const mesh = new THREE.Mesh(nodeGeo, mat);
-      const x = (Math.random() - 0.5) * 46;
-      const y = (Math.random() - 0.5) * 26;
-      const z = (Math.random() - 0.5) * 20;
-      mesh.position.set(x, y, z);
-      mesh.userData = {
-        basePos: new THREE.Vector3(x, y, z),
-        speed: 0.2 + Math.random() * 0.3,
-        offset: Math.random() * Math.PI * 2
-      };
-      nodes.push(mesh);
-      group.add(mesh);
-    }
+// Group for shapes
+const group = new THREE.Group();
+scene.add(group);
 
-    // connecting lines between nearby nodes
-    const lineMat = new THREE.LineBasicMaterial({ color: 0xC6F135, transparent: true, opacity: 0.12 });
-    const linePositions = [];
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const d = nodes[i].position.distanceTo(nodes[j].position);
-        if (d < 8) {
-          linePositions.push(nodes[i].position.x, nodes[i].position.y, nodes[i].position.z);
-          linePositions.push(nodes[j].position.x, nodes[j].position.y, nodes[j].position.z);
-        }
-      }
-    }
-    const lineGeo = new THREE.BufferGeometry();
-    lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
-    const lines = new THREE.LineSegments(lineGeo, lineMat);
-    group.add(lines);
+const geometries = [
+  new THREE.IcosahedronGeometry(0.9, 0),
+  new THREE.OctahedronGeometry(0.85, 0),
+  new THREE.TorusGeometry(0.7, 0.22, 16, 50),
+  new THREE.TorusKnotGeometry(0.5, 0.18, 80, 12),
+  new THREE.DodecahedronGeometry(0.85, 0),
+  new THREE.ConeGeometry(0.7, 1.2, 6),
+  new THREE.BoxGeometry(1,1,1),
+  new THREE.TetrahedronGeometry(1, 0),
+];
 
-    let mouseX = 0, mouseY = 0;
-    window.addEventListener('mousemove', (e) => {
-      mouseX = (e.clientX / window.innerWidth - 0.5);
-      mouseY = (e.clientY / window.innerHeight - 0.5);
-    });
+const colors = [0xff2d95, 0x7c3aed, 0x06b6d4, 0xf59e0b, 0x22d3ee, 0xa3e635, 0xec4899, 0x8b5cf6];
+const shapes = [];
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const clock = new THREE.Clock();
-
-    function animate() {
-      requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
-
-      if (!reduceMotion) {
-        nodes.forEach((n) => {
-          const d = n.userData;
-          n.position.y = d.basePos.y + Math.sin(t * d.speed + d.offset) * 0.6;
-          n.position.x = d.basePos.x + Math.cos(t * d.speed * 0.7 + d.offset) * 0.4;
-        });
-        group.rotation.y += 0.0009;
-        group.rotation.x = mouseY * 0.15;
-        group.rotation.y += mouseX * 0.0003;
-      }
-
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    window.addEventListener('resize', () => {
-      camera.aspect = container.clientWidth / container.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
-    });
-  })();
-
-  // ---- Project card 3D tilt ----
-  document.querySelectorAll('.tilt-card').forEach((card) => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const cx = rect.width / 2;
-      const cy = rect.height / 2;
-      const rotateX = ((y - cy) / cy) * -6;
-      const rotateY = ((x - cx) / cx) * 6;
-      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
-    });
+for(let i=0;i<16;i++){
+  const geo = geometries[i % geometries.length];
+  const mat = new THREE.MeshPhysicalMaterial({
+    color: colors[i % colors.length],
+    metalness: 0.4,
+    roughness: 0.2,
+    transparent: true,
+    opacity: 0.85,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.2,
+    emissive: colors[i % colors.length],
+    emissiveIntensity: 0.15,
   });
+  const mesh = new THREE.Mesh(geo, mat);
+  // wireframe overlay
+  const wire = new THREE.LineSegments(
+    new THREE.EdgesGeometry(geo),
+    new THREE.LineBasicMaterial({ color:0xffffff, transparent:true, opacity:0.18 })
+  );
+  mesh.add(wire);
+  
+  // Position
+  mesh.position.set(
+    (Math.random()-0.5) * 18,
+    (Math.random()-0.5) * 12,
+    (Math.random()-0.5) * 8 - 2
+  );
+  mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+  const scale = 0.5 + Math.random()*0.9;
+  mesh.scale.setScalar(scale);
+  
+  mesh.userData = {
+    speed: 0.2 + Math.random()*0.5,
+    rotSpeed: { x:(Math.random()-0.5)*0.01, y:(Math.random()-0.5)*0.01, z:(Math.random()-0.5)*0.01 },
+    floatPhase: Math.random()*Math.PI*2,
+    baseY: mesh.position.y,
+  };
+  group.add(mesh);
+  shapes.push(mesh);
+}
 
-  // ---- Scroll-reveal ----
-  const revealEls = document.querySelectorAll('.fade-up');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  revealEls.forEach((el) => io.observe(el));
+// Particles
+const particleCount = 600;
+const positions = new Float32Array(particleCount*3);
+const pcolors = new Float32Array(particleCount*3);
+const palette = [
+  [1,0.18,0.58],[0.49,0.23,0.93],[0.02,0.71,0.83],[0.96,0.62,0.04]
+];
+for(let i=0;i<particleCount;i++){
+  positions[i*3]   = (Math.random()-0.5)*30;
+  positions[i*3+1] = (Math.random()-0.5)*20;
+  positions[i*3+2] = (Math.random()-0.5)*15 - 3;
+  const c = palette[i % palette.length];
+  pcolors[i*3]=c[0]; pcolors[i*3+1]=c[1]; pcolors[i*3+2]=c[2];
+}
+const pGeo = new THREE.BufferGeometry();
+pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+pGeo.setAttribute('color', new THREE.BufferAttribute(pcolors, 3));
+const pMat = new THREE.PointsMaterial({ size:0.04, vertexColors:true, transparent:true, opacity:0.8, depthWrite:false, blending:THREE.AdditiveBlending });
+const particles = new THREE.Points(pGeo, pMat);
+scene.add(particles);
+
+// Mouse parallax
+const mouse = { x:0, y:0, tx:0, ty:0 };
+window.addEventListener('mousemove', (e)=>{
+  mouse.tx = (e.clientX/window.innerWidth - 0.5) * 2;
+  mouse.ty = (e.clientY/window.innerHeight - 0.5) * 2;
+});
+
+// Resize
+window.addEventListener('resize', ()=>{
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Animate
+const clock = new THREE.Clock();
+function animate(){
+  const t = clock.getElapsedTime();
+  
+  mouse.x += (mouse.tx - mouse.x) * 0.05;
+  mouse.y += (mouse.ty - mouse.y) * 0.05;
+  
+  group.rotation.y = mouse.x * 0.3;
+  group.rotation.x = mouse.y * 0.2;
+  
+  shapes.forEach(s=>{
+    s.rotation.x += s.userData.rotSpeed.x;
+    s.rotation.y += s.userData.rotSpeed.y;
+    s.rotation.z += s.userData.rotSpeed.z;
+    s.position.y = s.userData.baseY + Math.sin(t * s.userData.speed + s.userData.floatPhase) * 0.6;
+  });
+  
+  particles.rotation.y = t * 0.02;
+  particles.rotation.x = mouse.y * 0.1;
+  
+  camera.position.x += (mouse.x * 0.5 - camera.position.x) * 0.05;
+  camera.position.y += (-mouse.y * 0.5 - camera.position.y) * 0.05;
+  camera.lookAt(0,0,0);
+  
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ---------- Projects data + render ---------- */
+const projects = [
+  { title:"Candidate Search with GPT-OSS RAG", icon:"fa-magnifying-glass-chart", color:"from-pink-500 to-rose-600", tags:["Python","gpt-oss","RAG","Elasticsearch","Nginx"], desc:"Built & deployed a RAG-based model using gpt-oss to match CVs with job descriptions and retrieve the best candidates efficiently." },
+  { title:"Ollama (gpt-oss:20b) on Vast.ai", icon:"fa-brain", color:"from-violet-500 to-purple-700", tags:["ML","Ollama","gpt-oss","DevOps"], desc:"Deployed an Ollama-based 20B ML model in production, responsible for extracting skills and other data from CVs." },
+  { title:"Gemma 4B Image Explanation", icon:"fa-image", color:"from-cyan-500 to-blue-600", tags:["Gemma","Ollama","Nginx","DevOps"], desc:"Deployed a Gemma 4B model in production to read images and generate natural-language explanations." },
+  { title:"Automated Gmail Using n8n", icon:"fa-envelope-open-text", color:"from-amber-500 to-orange-600", tags:["n8n","Gmail","Automation"], desc:"Deployed an n8n instance to automate Gmail functionalities for candidates end-to-end." },
+  { title:"Containerized Deployments & CI/CD", icon:"fa-infinity", color:"from-emerald-500 to-teal-600", tags:["Docker","Jenkins","Kubernetes"], desc:"Established CI/CD pipelines using Jenkins and Docker, automating build & deployment. Managed K8s clusters for scalable updates." },
+  { title:"Redis Caching for High-Traffic", icon:"fa-bolt", color:"from-pink-500 to-fuchsia-600", tags:["Redis","Python","Performance"], desc:"Integrated Redis caching in high-traffic apps, significantly improving response times and reducing latency under heavy load." },
+  { title:"Advanced NLP & ML Solutions", icon:"fa-language", color:"from-violet-500 to-indigo-600", tags:["TensorFlow","OpenCV","BERT","NLP"], desc:"Developed NLP solutions using LLM & BERT embeddings for text classification. Deployed image detection API with TensorFlow + OpenCV." },
+  { title:"Job Post Refactoring & Location API", icon:"fa-location-dot", color:"from-cyan-500 to-sky-600", tags:["Nominatim","PostgreSQL","Python"], desc:"Engineered a tool to clean & structure job post data, integrating Nominatim with PostgreSQL for precise location extraction." },
+  { title:"Document Processing API Suite", icon:"fa-file-pdf", color:"from-amber-500 to-yellow-600", tags:["Python","PDF","API"], desc:"Designed a suite of APIs — PDF merger, image extractor, text extractor — streamlining document workflows in production." },
+  { title:"Scalable Web Scraping Engine", icon:"fa-spider", color:"from-rose-500 to-red-600", tags:["Scrapy","Selenium","Nginx"], desc:"Built a scalable scraping engine using Scrapy on Nginx, processing structured & unstructured data from 500+ websites." },
+  { title:"Elasticsearch Cluster (3 Nodes)", icon:"fa-database", color:"from-teal-500 to-emerald-600", tags:["Elasticsearch","Kibana","Gunicorn"], desc:"Deployed a 3-node ES cluster with vector embedding storage & semantic search. Custom keyword semantic search implemented." },
+  { title:"Ollama (LLAMA2) on Nginx", icon:"fa-robot", color:"from-fuchsia-500 to-purple-600", tags:["ML","LLAMA2","Nginx","DevOps"], desc:"Deployed an Ollama-based LLAMA2 model in production responsible for recreating job descriptions." },
+  { title:"Application Deployment & Optimization", icon:"fa-server", color:"from-blue-500 to-indigo-600", tags:["Python","Nginx","Apache","K8s"], desc:"Led deployment of 50+ apps across Nginx, Apache, Kubernetes & Ingress. Optimized load balancing and fault tolerance." },
+  { title:"Geolocation & Travel-Time Service", icon:"fa-map-location-dot", color:"from-lime-500 to-green-600", tags:["Nominatim","PostgreSQL"], desc:"Installed & configured Nominatim and Isochrone services for precise geographical data handling and travel-time queries." },
+];
+
+const grid = document.getElementById('projectsGrid');
+projects.forEach((p, i)=>{
+  const card = document.createElement('div');
+  card.className = `reveal pcard glass glass-hover rounded-3xl p-6 cursor-pointer`;
+  card.innerHTML = `
+    <div class="flex items-center justify-between mb-5">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${p.color} flex items-center justify-center shadow-lg">
+        <i class="fa-solid ${p.icon} text-white text-lg"></i>
+      </div>
+      <span class="font-mono text-xs text-white/30">0${(i+1).toString().padStart(2,'0')}</span>
+    </div>
+    <h3 class="font-display text-lg font-bold mb-2 leading-snug">${p.title}</h3>
+    <p class="text-sm text-white/60 mb-4 leading-relaxed">${p.desc}</p>
+    <div class="flex flex-wrap gap-1.5">
+      ${p.tags.map(t=>`<span class="text-[11px] font-mono px-2 py-0.5 rounded-md bg-white/5 text-white/70">${t}</span>`).join('')}
+    </div>
+  `;
+  // mouse glow
+  card.addEventListener('mousemove', (e)=>{
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX-r.left)+'px');
+    card.style.setProperty('--my', (e.clientY-r.top)+'px');
+  });
+  grid.appendChild(card);
+});
+
+/* ---------- Reveal on scroll ---------- */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+
+/* ---------- Nav active state on scroll ---------- */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+const navObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      navLinks.forEach(l=>{
+        l.classList.toggle('active', l.getAttribute('href') === '#'+id);
+      });
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(s=> navObserver.observe(s));
+
+/* ---------- Smooth scroll for nav ---------- */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', (e)=>{
+    const target = document.querySelector(a.getAttribute('href'));
+    if(target){
+      e.preventDefault();
+      target.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+  });
+});
+
+/* ---------- Contact form ---------- */
+const form = document.getElementById('contactForm');
+form.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const msg = document.getElementById('formMsg');
+  msg.classList.remove('hidden');
+  form.reset();
+  setTimeout(()=> msg.classList.add('hidden'), 4000);
+});
+
+/* ---------- Tilt effect on glass-hover cards ---------- */
+document.querySelectorAll('.glass-hover').forEach(card=>{
+  card.addEventListener('mousemove', (e)=>{
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `translateY(-6px) perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`;
+  });
+  card.addEventListener('mouseleave', ()=>{
+    card.style.transform = '';
+  });
+});
 </script>
-
 </body>
 </html>
