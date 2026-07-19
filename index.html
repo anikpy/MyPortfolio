@@ -30,240 +30,135 @@
     --fg:#f4efe4;
     --muted:#8a8a92;
     --dim:#5a5a62;
-    --accent:#c5ff3d;     /* electric lime */
-    --accent-2:#ff6b3d;   /* warm coral */
-    --accent-3:#52e5d4;   /* mint teal */
+    --accent:#c5ff3d;
+    --accent-2:#ff6b3d;
+    --accent-3:#52e5d4;
     --border:rgba(255,255,255,0.08);
     --border-strong:rgba(255,255,255,0.16);
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
-    margin:0;
-    background:var(--bg);
-    color:var(--fg);
-    font-family:'Manrope',sans-serif;
-    font-weight:400;
-    overflow-x:hidden;
-    cursor:none;
+    margin:0;background:var(--bg);color:var(--fg);
+    font-family:'Manrope',sans-serif;font-weight:400;
+    overflow-x:hidden;cursor:none;
   }
-  /* Noise overlay */
   body::before{
-    content:'';
-    position:fixed;inset:0;
+    content:'';position:fixed;inset:0;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.9 0 0 0 0 0.9 0 0 0 0.18 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
-    opacity:0.4;
-    pointer-events:none;
-    z-index:9999;
-    mix-blend-mode:overlay;
+    opacity:0.4;pointer-events:none;z-index:9999;mix-blend-mode:overlay;
   }
   .font-display{font-family:'Syne',sans-serif;letter-spacing:-0.02em}
   .font-mono{font-family:'JetBrains Mono',monospace}
-
-  /* Custom cursor */
   .cursor-dot,.cursor-ring{
-    position:fixed;top:0;left:0;
-    pointer-events:none;
-    z-index:10000;
-    border-radius:50%;
-    transition:transform .15s ease,width .25s ease,height .25s ease,background .25s ease;
-    transform:translate(-50%,-50%);
-    mix-blend-mode:difference;
+    position:fixed;top:0;left:0;pointer-events:none;z-index:10000;
+    border-radius:50%;transition:transform .15s ease,width .25s ease,height .25s ease,background .25s ease;
+    transform:translate(-50%,-50%);mix-blend-mode:difference;
   }
   .cursor-dot{width:6px;height:6px;background:var(--accent);}
   .cursor-ring{width:36px;height:36px;border:1px solid rgba(245,239,228,0.4);}
   .cursor-ring.hover{width:60px;height:60px;background:rgba(197,255,61,0.08);border-color:var(--accent);}
-
-  /* Three canvas */
   #scene{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
   .grain-overlay{position:fixed;inset:0;pointer-events:none;z-index:1;
-    background:radial-gradient(ellipse at 50% 0%,transparent 40%,rgba(10,10,13,0.6) 100%);
-  }
-
-  /* Animations */
-  @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes slideLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
-  @keyframes slideRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+    background:radial-gradient(ellipse at 50% 0%,transparent 40%,rgba(10,10,13,0.6) 100%);}
   @keyframes pulseDot{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
   @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
   @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
   @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-  @keyframes rotateSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-
+  @keyframes load{0%{width:0%}100%{width:100%}}
   .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
   .reveal.in{opacity:1;transform:translateY(0)}
   .reveal-l{opacity:0;transform:translateX(-40px);transition:opacity .9s,transform .9s}
   .reveal-l.in{opacity:1;transform:translateX(0)}
   .reveal-r{opacity:0;transform:translateX(40px);transition:opacity .9s,transform .9s}
   .reveal-r.in{opacity:1;transform:translateX(0)}
-
   .marquee{display:flex;animation:marquee 40s linear infinite;width:max-content}
-
-  /* Gradient text */
   .text-grad{
     background:linear-gradient(120deg,var(--accent) 0%,var(--accent-3) 50%,var(--accent-2) 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .text-shimmer{
-    background:linear-gradient(90deg,var(--fg) 0%,var(--accent) 50%,var(--fg) 100%);
-    background-size:200% 100%;
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    animation:shimmer 6s linear infinite;
-  }
-
-  /* Buttons */
   .btn{
-    position:relative;
-    display:inline-flex;align-items:center;gap:.6rem;
-    padding:.95rem 1.6rem;
-    font-family:'JetBrains Mono',monospace;
+    position:relative;display:inline-flex;align-items:center;gap:.6rem;
+    padding:.95rem 1.6rem;font-family:'JetBrains Mono',monospace;
     font-size:.78rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
-    border:1px solid var(--border-strong);
-    color:var(--fg);background:rgba(255,255,255,0.02);
-    border-radius:2px;
-    transition:all .35s cubic-bezier(.2,.7,.2,1);
-    overflow:hidden;
+    border:1px solid var(--border-strong);color:var(--fg);background:rgba(255,255,255,0.02);
+    border-radius:2px;transition:all .35s cubic-bezier(.2,.7,.2,1);overflow:hidden;
+    text-decoration:none;
   }
-  .btn::before{
-    content:'';position:absolute;inset:0;
-    background:var(--accent);
-    transform:translateY(101%);
-    transition:transform .45s cubic-bezier(.2,.7,.2,1);
-    z-index:-1;
-  }
+  .btn::before{content:'';position:absolute;inset:0;background:var(--accent);transform:translateY(101%);transition:transform .45s cubic-bezier(.2,.7,.2,1);z-index:-1;}
   .btn:hover{color:#0a0a0d;border-color:var(--accent);}
   .btn:hover::before{transform:translateY(0)}
   .btn.accent{background:var(--accent);color:#0a0a0d;border-color:var(--accent);}
   .btn.accent::before{background:#0a0a0d;}
   .btn.accent:hover{color:var(--accent);}
-
-  /* Cards */
-  .glass{
-    background:rgba(21,21,28,0.55);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-    border:1px solid var(--border);
-  }
+  .glass{background:rgba(21,21,28,0.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);}
   .card-hover{transition:transform .5s cubic-bezier(.2,.7,.2,1),border-color .5s,background .5s}
   .card-hover:hover{transform:translateY(-6px);border-color:var(--border-strong);background:rgba(21,21,28,0.85);}
-
-  /* Tech tag */
   .tag{
-    display:inline-flex;align-items:center;
-    font-family:'JetBrains Mono',monospace;
-    font-size:.68rem;font-weight:500;letter-spacing:0.04em;
-    padding:.35rem .7rem;
-    color:var(--muted);
-    border:1px solid var(--border);
-    border-radius:2px;
-    background:rgba(255,255,255,0.02);
-    transition:all .3s;
+    display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;
+    font-size:.68rem;font-weight:500;letter-spacing:0.04em;padding:.35rem .7rem;
+    color:var(--muted);border:1px solid var(--border);border-radius:2px;
+    background:rgba(255,255,255,0.02);transition:all .3s;
   }
   .tag:hover{color:var(--accent);border-color:var(--accent);}
   .tag.solid{color:var(--accent);border-color:rgba(197,255,61,0.3);background:rgba(197,255,61,0.05);}
-
-  /* Section heading */
+  .tag.coral{color:var(--accent-2);border-color:rgba(255,107,61,0.3);background:rgba(255,107,61,0.05);}
+  .tag.mint{color:var(--accent-3);border-color:rgba(82,229,212,0.3);background:rgba(82,229,212,0.05);}
   .section-num{
-    font-family:'JetBrains Mono',monospace;
-    font-size:.78rem;
-    color:var(--accent);
-    letter-spacing:0.2em;
-    display:inline-flex;align-items:center;gap:.6rem;
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--accent);
+    letter-spacing:0.2em;display:inline-flex;align-items:center;gap:.6rem;
   }
-  .section-num::before{
-    content:'';width:32px;height:1px;background:var(--accent);
-  }
-
-  /* Timeline */
-  .timeline-line{
-    position:absolute;left:50%;top:0;bottom:0;width:1px;
+  .section-num::before{content:'';width:32px;height:1px;background:var(--accent);}
+  .timeline-line{position:absolute;left:50%;top:0;bottom:0;width:1px;
     background:linear-gradient(to bottom,transparent 0%,var(--border-strong) 8%,var(--border-strong) 92%,transparent 100%);
-    transform:translateX(-50%);
-  }
-  .tl-dot{
-    width:14px;height:14px;border-radius:50%;
-    background:var(--bg);
-    border:2px solid var(--accent);
-    position:absolute;left:50%;top:8px;transform:translateX(-50%);
-    box-shadow:0 0 0 6px rgba(197,255,61,0.08);
-  }
-
-  /* Project card tilt */
+    transform:translateX(-50%);}
+  .tl-dot{width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--accent);
+    position:absolute;left:50%;top:8px;transform:translateX(-50%);box-shadow:0 0 0 6px rgba(197,255,61,0.08);}
   .tilt{transform-style:preserve-3d;transition:transform .2s ease-out;}
   .tilt-inner{transform:translateZ(40px);}
-
-  /* Scrollbar */
   ::-webkit-scrollbar{width:8px}
   ::-webkit-scrollbar-track{background:var(--bg)}
   ::-webkit-scrollbar-thumb{background:#26262e;border-radius:4px}
   ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
-
-  /* Selection */
   ::selection{background:var(--accent);color:#0a0a0d;}
-
-  /* Loader */
   #loader{position:fixed;inset:0;background:var(--bg);z-index:10001;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;transition:opacity .8s,visibility .8s;}
   #loader.gone{opacity:0;visibility:hidden;}
   .loader-bar{width:200px;height:1px;background:rgba(255,255,255,0.1);overflow:hidden;}
   .loader-bar div{height:100%;background:var(--accent);animation:load 1.4s ease-in-out forwards;}
-  @keyframes load{0%{width:0%}100%{width:100%}}
-
-  /* Hide cursor on touch */
-  @media (max-width:768px){
-    body{cursor:auto}
-    .cursor-dot,.cursor-ring{display:none}
-  }
-
-  /* Hero name outline */
-  .name-outline{
-    -webkit-text-stroke:1.5px var(--fg);
-    color:transparent;
-  }
-  @media (max-width:640px){
-    .name-outline{-webkit-text-stroke:1px var(--fg);}
-  }
-
-  /* Floating badge */
+  @media (max-width:768px){body{cursor:auto}.cursor-dot,.cursor-ring{display:none}}
+  .name-outline{-webkit-text-stroke:1.5px var(--fg);color:transparent;}
+  @media (max-width:640px){.name-outline{-webkit-text-stroke:1px var(--fg);}}
   .badge-float{animation:float 4s ease-in-out infinite;}
-
-  /* Magnetic */
   .magnetic{transition:transform .25s cubic-bezier(.2,.7,.2,1);}
-
-  /* Bento */
-  .bento-card{position:relative;overflow:hidden;border-radius:4px;}
-
-  /* Animated underline link */
   .a-link{position:relative;color:var(--fg);text-decoration:none;}
-  .a-link::after{
-    content:'';position:absolute;left:0;bottom:-2px;width:100%;height:1px;
-    background:var(--accent);transform:scaleX(0);transform-origin:right;
-    transition:transform .4s cubic-bezier(.2,.7,.2,1);
-  }
+  .a-link::after{content:'';position:absolute;left:0;bottom:-2px;width:100%;height:1px;
+    background:var(--accent);transform:scaleX(0);transform-origin:right;transition:transform .4s cubic-bezier(.2,.7,.2,1);}
   .a-link:hover::after{transform:scaleX(1);transform-origin:left;}
-
-  /* Mobile nav */
   #mobileMenu{transform:translateX(100%);transition:transform .5s cubic-bezier(.2,.7,.2,1);}
   #mobileMenu.open{transform:translateX(0);}
-
-  /* Counter */
-  .counter-line{
-    width:40px;height:1px;background:var(--accent);margin-bottom:.5rem;
-  }
+  .counter-line{width:40px;height:1px;background:var(--accent);margin-bottom:.5rem;}
+  /* Skill bar */
+  .skill-bar{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;position:relative;}
+  .skill-bar-fill{height:100%;border-radius:2px;transform:scaleX(0);transform-origin:left;
+    transition:transform 1.2s cubic-bezier(.2,.7,.2,1);}
+  .skill-bar.in .skill-bar-fill{transform:scaleX(1);}
+  /* Category icon */
+  .cat-icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid;}
+  /* Expertise table row */
+  .exp-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px dashed var(--border);}
+  .exp-row:last-child{border-bottom:none;}
 </style>
 </head>
 <body>
 
-<!-- LOADER -->
 <div id="loader">
   <div class="font-mono text-xs tracking-[0.3em] text-[var(--muted)]">LOADING SCENE</div>
   <div class="loader-bar"><div></div></div>
 </div>
 
-<!-- CURSOR -->
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
 
-<!-- 3D SCENE -->
 <canvas id="scene"></canvas>
 <div class="grain-overlay"></div>
 
@@ -274,7 +169,7 @@
   </a>
   <div class="hidden md:flex items-center gap-9 font-mono text-xs tracking-[0.15em] uppercase text-white/80">
     <a href="#about" class="a-link magnetic">About</a>
-    <a href="#skills" class="a-link magnetic">Skills</a>
+    <a href="#skills" class="a-link magnetic">Expertise</a>
     <a href="#experience" class="a-link magnetic">Work</a>
     <a href="#projects" class="a-link magnetic">Projects</a>
     <a href="#contact" class="a-link magnetic">Contact</a>
@@ -286,10 +181,9 @@
   <button id="menuBtn" class="md:hidden text-white text-xl magnetic" aria-label="Menu"><i class="fas fa-bars"></i></button>
 </nav>
 
-<!-- MOBILE MENU -->
 <div id="mobileMenu" class="fixed inset-0 z-40 bg-[var(--bg)]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden">
   <a href="#about" class="font-display text-3xl text-white mobile-link">About</a>
-  <a href="#skills" class="font-display text-3xl text-white mobile-link">Skills</a>
+  <a href="#skills" class="font-display text-3xl text-white mobile-link">Expertise</a>
   <a href="#experience" class="font-display text-3xl text-white mobile-link">Work</a>
   <a href="#projects" class="font-display text-3xl text-white mobile-link">Projects</a>
   <a href="#contact" class="font-display text-3xl text-white mobile-link">Contact</a>
@@ -304,13 +198,11 @@
       <span class="w-2 h-2 rounded-full bg-[var(--accent)]" style="animation:pulseDot 2s ease-in-out infinite"></span>
       <span class="font-mono text-xs tracking-[0.25em] text-[var(--muted)] uppercase">AI / ML & DevOps Engineer · Dhaka, Bangladesh</span>
     </div>
-
     <h1 class="font-display font-extrabold leading-[0.85] tracking-tighter reveal">
       <span class="block text-[18vw] md:text-[12vw] text-white">ARIFUR</span>
       <span class="block text-[18vw] md:text-[12vw] name-outline">RAHMAN</span>
       <span class="block text-[18vw] md:text-[12vw] text-grad">ANIK.</span>
     </h1>
-
     <div class="grid md:grid-cols-12 gap-8 mt-12 reveal">
       <div class="md:col-span-7">
         <p class="text-lg md:text-xl text-[var(--fg)]/85 leading-relaxed max-w-2xl">
@@ -325,15 +217,13 @@
       </div>
     </div>
   </div>
-
-  <!-- Scroll hint -->
   <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 reveal" style="transition-delay:.6s">
     <span class="font-mono text-[10px] tracking-[0.3em] text-[var(--muted)] uppercase">Scroll</span>
     <div class="w-px h-12 bg-gradient-to-b from-[var(--accent)] to-transparent"></div>
   </div>
 </section>
 
-<!-- MARQUEE STRIP -->
+<!-- MARQUEE -->
 <section class="border-y border-[var(--border)] py-5 overflow-hidden bg-[var(--bg-2)]/40 backdrop-blur-sm relative z-10">
   <div class="marquee gap-12 font-display text-2xl md:text-3xl font-semibold text-white/30 whitespace-nowrap">
     <span>Python</span><span class="text-[var(--accent)]">✦</span>
@@ -346,7 +236,6 @@
     <span>LLM Fine-Tuning</span><span class="text-[var(--accent)]">✦</span>
     <span>FastAPI</span><span class="text-[var(--accent)]">✦</span>
     <span>PyTorch</span><span class="text-[var(--accent)]">✦</span>
-    <!-- Duplicate for seamless loop -->
     <span>Python</span><span class="text-[var(--accent)]">✦</span>
     <span>LangChain</span><span class="text-[var(--accent)]">✦</span>
     <span>RAG Systems</span><span class="text-[var(--accent)]">✦</span>
@@ -367,9 +256,7 @@
       <div class="md:col-span-4 reveal-l">
         <span class="section-num">01 / ABOUT</span>
         <h2 class="font-display font-extrabold text-4xl md:text-5xl mt-6 leading-[0.95]">
-          Engineering<br/>
-          <span class="text-grad">intelligent</span><br/>
-          infrastructure.
+          Engineering<br/><span class="text-grad">intelligent</span><br/>infrastructure.
         </h2>
       </div>
       <div class="md:col-span-7 md:col-start-6 reveal-r">
@@ -377,10 +264,8 @@
           I'm an <span class="text-white font-semibold">AI Fullstack Developer</span> with 3+ years of experience building scalable ML systems and automating cloud-based deployments. My work spans LLM fine-tuning, vector search, agentic AI, and the DevOps backbone that keeps models running in production.
         </p>
         <p class="text-base text-[var(--muted)] leading-relaxed mb-10">
-          From deploying Ollama models behind Nginx to orchestrating Kubernetes clusters and crafting Redis-cached high-traffic APIs, I bridge the gap between research-grade ML and reliable, maintainable infrastructure. I'm passionate about delivering solutions that combine data-driven insights with operational excellence.
+          From deploying Ollama models behind Nginx to orchestrating Kubernetes clusters and crafting Redis-cached high-traffic APIs, I bridge the gap between research-grade ML and reliable, maintainable infrastructure.
         </p>
-
-        <!-- Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
           <div class="reveal" style="transition-delay:.1s">
             <div class="counter-line"></div>
@@ -408,144 +293,442 @@
   </div>
 </section>
 
-<!-- SKILLS -->
+<!-- ============ EXPERTISE / SKILLS (COMPREHENSIVE) ============ -->
 <section id="skills" class="py-24 md:py-36 px-6 md:px-10 relative">
   <div class="max-w-7xl mx-auto">
     <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6 reveal">
       <div>
-        <span class="section-num">02 / CAPABILITIES</span>
+        <span class="section-num">02 / FULL EXPERTISE</span>
         <h2 class="font-display font-extrabold text-4xl md:text-6xl mt-6 leading-[0.95]">
-          The full <span class="text-grad">stack</span><br/>of intelligence.
+          The complete<br/><span class="text-grad">technology stack.</span>
         </h2>
       </div>
-      <p class="max-w-md text-[var(--muted)]">A curated toolkit spanning machine learning, agentic AI, backend engineering, and the DevOps pipelines that ship them.</p>
+      <p class="max-w-md text-[var(--muted)]">Every tool, framework, and technology I work with — organized across AI/ML, LLM systems, backend, data, DevOps, and automation.</p>
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- AI/ML -->
+    <!-- ===== PART A: 6 Category Cards with ALL tech tags ===== -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+
+      <!-- Card 1: Programming & Core Languages -->
       <div class="glass card-hover p-7 reveal">
         <div class="flex items-center justify-between mb-5">
-          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent)]/10 border border-[var(--accent)]/30">
-            <i class="fas fa-brain text-[var(--accent)]"></i>
+          <div class="cat-icon" style="background:rgba(197,255,61,0.1);border-color:rgba(197,255,61,0.3)">
+            <i class="fas fa-code text-[var(--accent)]"></i>
           </div>
           <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">01</span>
         </div>
-        <h3 class="font-display font-bold text-xl mb-1">AI & Machine Learning</h3>
-        <p class="text-sm text-[var(--muted)] mb-5">Model training, fine-tuning, and inference systems.</p>
+        <h3 class="font-display font-bold text-xl mb-1">Programming & Languages</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Core languages and primary frameworks.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="tag solid">TensorFlow</span>
-          <span class="tag solid">PyTorch</span>
-          <span class="tag solid">Keras</span>
-          <span class="tag">Scikit-Learn</span>
-          <span class="tag">BERT</span>
-          <span class="tag">OpenCV</span>
-          <span class="tag">Predictive Analytics</span>
+          <span class="tag solid">Python</span>
+          <span class="tag solid">React.js</span>
+          <span class="tag solid">Next.js</span>
+          <span class="tag solid">Django</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">REST APIs</span>
         </div>
       </div>
 
-      <!-- LLM & RAG -->
+      <!-- Card 2: AI/ML Frameworks -->
       <div class="glass card-hover p-7 reveal" style="transition-delay:.1s">
         <div class="flex items-center justify-between mb-5">
-          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent-2)]/10 border border-[var(--accent-2)]/30">
-            <i class="fas fa-robot text-[var(--accent-2)]"></i>
+          <div class="cat-icon" style="background:rgba(255,107,61,0.1);border-color:rgba(255,107,61,0.3)">
+            <i class="fas fa-brain text-[var(--accent-2)]"></i>
           </div>
           <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">02</span>
         </div>
-        <h3 class="font-display font-bold text-xl mb-1">LLMs & Agentic AI</h3>
-        <p class="text-sm text-[var(--muted)] mb-5">RAG pipelines, embeddings, and autonomous agents.</p>
+        <h3 class="font-display font-bold text-xl mb-1">AI/ML Frameworks & Libraries</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Model training, deep learning, and computer vision.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="tag solid">LangChain</span>
-          <span class="tag solid">LangGraph</span>
-          <span class="tag solid">RAG</span>
-          <span class="tag">LLM Fine-Tuning</span>
-          <span class="tag">Vector Embedding</span>
-          <span class="tag">FAISS</span>
-          <span class="tag">Pinecone</span>
-          <span class="tag">Agentic AI</span>
+          <span class="tag coral">TensorFlow</span>
+          <span class="tag coral">Keras</span>
+          <span class="tag coral">PyTorch</span>
+          <span class="tag coral">Scikit-Learn</span>
+          <span class="tag">BERT</span>
+          <span class="tag">OpenCV</span>
+          <span class="tag">ML Models</span>
         </div>
       </div>
 
-      <!-- Backend -->
+      <!-- Card 3: LLM & Agentic AI -->
       <div class="glass card-hover p-7 reveal" style="transition-delay:.2s">
         <div class="flex items-center justify-between mb-5">
-          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent-3)]/10 border border-[var(--accent-3)]/30">
-            <i class="fas fa-server text-[var(--accent-3)]"></i>
+          <div class="cat-icon" style="background:rgba(82,229,212,0.1);border-color:rgba(82,229,212,0.3)">
+            <i class="fas fa-robot text-[var(--accent-3)]"></i>
           </div>
           <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">03</span>
         </div>
-        <h3 class="font-display font-bold text-xl mb-1">Backend & APIs</h3>
-        <p class="text-sm text-[var(--muted)] mb-5">High-performance API services and frameworks.</p>
+        <h3 class="font-display font-bold text-xl mb-1">LLM & Agentic AI</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Large language models, RAG, and autonomous agents.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="tag solid">Python</span>
-          <span class="tag solid">Django</span>
-          <span class="tag solid">FastAPI</span>
-          <span class="tag">Flask</span>
-          <span class="tag">Django REST</span>
-          <span class="tag">Streamlit</span>
-          <span class="tag">React</span>
-          <span class="tag">Next.js</span>
+          <span class="tag mint">LangChain</span>
+          <span class="tag mint">LangGraph</span>
+          <span class="tag mint">RAG</span>
+          <span class="tag mint">LLM Fine-Tuning</span>
+          <span class="tag mint">Agentic AI</span>
+          <span class="tag">LLM</span>
+          <span class="tag">Vector Embedding</span>
+          <span class="tag">FAISS</span>
+          <span class="tag">Pinecone</span>
+          <span class="tag">ELK</span>
         </div>
       </div>
 
-      <!-- Data & Search -->
+      <!-- Card 4: NLP & ML Operations -->
       <div class="glass card-hover p-7 reveal" style="transition-delay:.3s">
         <div class="flex items-center justify-between mb-5">
-          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent)]/10 border border-[var(--accent)]/30">
-            <i class="fas fa-database text-[var(--accent)]"></i>
+          <div class="cat-icon" style="background:rgba(197,255,61,0.1);border-color:rgba(197,255,61,0.3)">
+            <i class="fas fa-diagram-project text-[var(--accent)]"></i>
           </div>
           <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">04</span>
         </div>
-        <h3 class="font-display font-bold text-xl mb-1">Data & Search</h3>
-        <p class="text-sm text-[var(--muted)] mb-5">Databases, search engines, and ETL pipelines.</p>
+        <h3 class="font-display font-bold text-xl mb-1">NLP & ML Operations</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Text processing, analytics, and model lifecycle.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="tag solid">ElasticSearch</span>
-          <span class="tag solid">PostgreSQL</span>
-          <span class="tag">MSSQL</span>
-          <span class="tag">ELK Stack</span>
-          <span class="tag">Kibana</span>
-          <span class="tag">ETL & ELT</span>
+          <span class="tag solid">NLP</span>
+          <span class="tag solid">Text Classification</span>
+          <span class="tag solid">Predictive Analytics</span>
+          <span class="tag">Data Preprocessing</span>
+          <span class="tag">Feature Engineering</span>
+          <span class="tag">Model Evaluation</span>
         </div>
       </div>
 
-      <!-- DevOps -->
+      <!-- Card 5: API, Backend & Databases -->
       <div class="glass card-hover p-7 reveal" style="transition-delay:.4s">
         <div class="flex items-center justify-between mb-5">
-          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent-2)]/10 border border-[var(--accent-2)]/30">
-            <i class="fas fa-cubes text-[var(--accent-2)]"></i>
+          <div class="cat-icon" style="background:rgba(255,107,61,0.1);border-color:rgba(255,107,61,0.3)">
+            <i class="fas fa-server text-[var(--accent-2)]"></i>
           </div>
           <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">05</span>
         </div>
-        <h3 class="font-display font-bold text-xl mb-1">DevOps & Infra</h3>
-        <p class="text-sm text-[var(--muted)] mb-5">Containerization, CI/CD, and orchestration.</p>
+        <h3 class="font-display font-bold text-xl mb-1">API, Backend & Databases</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Framework APIs, databases, and search engines.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="tag solid">Docker</span>
-          <span class="tag solid">Kubernetes</span>
-          <span class="tag solid">Jenkins</span>
-          <span class="tag">Nginx</span>
-          <span class="tag">ArgoCD</span>
-          <span class="tag">Terraform</span>
-          <span class="tag">CI/CD</span>
-          <span class="tag">Git</span>
+          <span class="tag coral">FastAPI</span>
+          <span class="tag coral">Flask</span>
+          <span class="tag coral">Django REST Framework</span>
+          <span class="tag coral">Streamlit</span>
+          <span class="tag coral">ElasticSearch</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">MSSQL</span>
+          <span class="tag">Kibana</span>
+          <span class="tag">Redis</span>
+          <span class="tag">Gunicorn</span>
         </div>
       </div>
 
-      <!-- Automation -->
+      <!-- Card 6: DevOps & Infrastructure -->
       <div class="glass card-hover p-7 reveal" style="transition-delay:.5s">
         <div class="flex items-center justify-between mb-5">
-          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent-3)]/10 border border-[var(--accent-3)]/30">
-            <i class="fas fa-gear text-[var(--accent-3)]"></i>
+          <div class="cat-icon" style="background:rgba(82,229,212,0.1);border-color:rgba(82,229,212,0.3)">
+            <i class="fas fa-cubes text-[var(--accent-3)]"></i>
           </div>
           <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">06</span>
         </div>
-        <h3 class="font-display font-bold text-xl mb-1">Automation & Scraping</h3>
-        <p class="text-sm text-[var(--muted)] mb-5">Workflow automation and large-scale data extraction.</p>
+        <h3 class="font-display font-bold text-xl mb-1">DevOps & Infrastructure</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Containerization, CI/CD, and orchestration.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="tag solid">n8n</span>
-          <span class="tag solid">Selenium</span>
-          <span class="tag solid">Scrapy</span>
-          <span class="tag">Load Balancing</span>
-          <span class="tag">Monitoring</span>
-          <span class="tag">Redis</span>
+          <span class="tag mint">Docker</span>
+          <span class="tag mint">Kubernetes</span>
+          <span class="tag mint">Jenkins</span>
+          <span class="tag mint">ArgoCD</span>
+          <span class="tag">Nginx</span>
+          <span class="tag">Apache</span>
+          <span class="tag">Ingress</span>
+          <span class="tag">Terraform</span>
+          <span class="tag">Git</span>
+          <span class="tag">CI/CD</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PART B: Detailed Expertise Matrix ===== -->
+    <div class="reveal mb-8">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-8 h-px bg-[var(--accent)]"></div>
+        <span class="font-mono text-xs tracking-[0.2em] text-[var(--accent)] uppercase">Detailed Breakdown</span>
+      </div>
+      <h3 class="font-display font-bold text-2xl md:text-3xl">Every technology, mapped.</h3>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-5">
+
+      <!-- AI & Machine Learning Detail -->
+      <div class="glass p-7 reveal">
+        <div class="flex items-center gap-3 mb-5">
+          <i class="fas fa-brain text-[var(--accent-2)] text-lg"></i>
+          <h4 class="font-display font-bold text-lg">AI & Machine Learning</h4>
+          <span class="ml-auto font-mono text-[10px] text-[var(--muted)]">7 ITEMS</span>
+        </div>
+        <div class="space-y-3">
+          <div class="skill-bar" data-fill="92%">
+            <div class="skill-bar-fill" style="background:var(--accent-2);width:92%"></div>
+          </div>
+          <div class="exp-row">
+            <span class="text-sm">TensorFlow</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span>
+          </div>
+          <div class="exp-row">
+            <span class="text-sm">PyTorch</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span>
+          </div>
+          <div class="exp-row">
+            <span class="text-sm">Keras</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span>
+          </div>
+          <div class="exp-row">
+            <span class="text-sm">Scikit-Learn</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span>
+          </div>
+          <div class="exp-row">
+            <span class="text-sm">BERT</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span>
+          </div>
+          <div class="exp-row">
+            <span class="text-sm">OpenCV</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span>
+          </div>
+          <div class="exp-row">
+            <span class="text-sm">Predictive Analytics</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LLM & Agentic AI Detail -->
+      <div class="glass p-7 reveal" style="transition-delay:.1s">
+        <div class="flex items-center gap-3 mb-5">
+          <i class="fas fa-robot text-[var(--accent-3)] text-lg"></i>
+          <h4 class="font-display font-bold text-lg">LLM & Agentic AI</h4>
+          <span class="ml-auto font-mono text-[10px] text-[var(--muted)]">10 ITEMS</span>
+        </div>
+        <div class="space-y-3">
+          <div class="skill-bar" data-fill="95%">
+            <div class="skill-bar-fill" style="background:var(--accent-3);width:95%"></div>
+          </div>
+          <div class="exp-row"><span class="text-sm">LangChain</span><span class="font-mono text-[10px] text-[var(--accent-3)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">LangGraph</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">RAG (Retrieval-Augmented Generation)</span><span class="font-mono text-[10px] text-[var(--accent-3)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">LLM Fine-Tuning</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Agentic AI</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">LLM</span><span class="font-mono text-[10px] text-[var(--accent-3)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Vector Embedding</span><span class="font-mono text-[10px] text-[var(--accent-3)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">FAISS</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Pinecone</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">ELK Stack</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+        </div>
+      </div>
+
+      <!-- NLP & ML Ops Detail -->
+      <div class="glass p-7 reveal" style="transition-delay:.2s">
+        <div class="flex items-center gap-3 mb-5">
+          <i class="fas fa-diagram-project text-[var(--accent)] text-lg"></i>
+          <h4 class="font-display font-bold text-lg">NLP & ML Operations</h4>
+          <span class="ml-auto font-mono text-[10px] text-[var(--muted)]">6 ITEMS</span>
+        </div>
+        <div class="space-y-3">
+          <div class="skill-bar" data-fill="90%">
+            <div class="skill-bar-fill" style="background:var(--accent);width:90%"></div>
+          </div>
+          <div class="exp-row"><span class="text-sm">NLP (Natural Language Processing)</span><span class="font-mono text-[10px] text-[var(--accent)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Text Classification</span><span class="font-mono text-[10px] text-[var(--accent)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">ML Models</span><span class="font-mono text-[10px] text-[var(--accent)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Data Preprocessing</span><span class="font-mono text-[10px] text-[var(--accent)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Feature Engineering</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Model Evaluation</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+        </div>
+      </div>
+
+      <!-- Backend & API Frameworks Detail -->
+      <div class="glass p-7 reveal" style="transition-delay:.3s">
+        <div class="flex items-center gap-3 mb-5">
+          <i class="fas fa-server text-[var(--accent-2)] text-lg"></i>
+          <h4 class="font-display font-bold text-lg">Backend & API Frameworks</h4>
+          <span class="ml-auto font-mono text-[10px] text-[var(--muted)]">6 ITEMS</span>
+        </div>
+        <div class="space-y-3">
+          <div class="skill-bar" data-fill="93%">
+            <div class="skill-bar-fill" style="background:var(--accent-2);width:93%"></div>
+          </div>
+          <div class="exp-row"><span class="text-sm">Python</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Django</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Django REST Framework</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">FastAPI</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Flask</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Streamlit</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span></div>
+        </div>
+      </div>
+
+      <!-- Frontend Detail -->
+      <div class="glass p-7 reveal" style="transition-delay:.4s">
+        <div class="flex items-center gap-3 mb-5">
+          <i class="fas fa-window-restore text-[var(--accent-3)] text-lg"></i>
+          <h4 class="font-display font-bold text-lg">Frontend Development</h4>
+          <span class="ml-auto font-mono text-[10px] text-[var(--muted)]">3 ITEMS</span>
+        </div>
+        <div class="space-y-3">
+          <div class="skill-bar" data-fill="80%">
+            <div class="skill-bar-fill" style="background:var(--accent-3);width:80%"></div>
+          </div>
+          <div class="exp-row"><span class="text-sm">React.js</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Next.js</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">JavaScript</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+        </div>
+      </div>
+
+      <!-- Databases & Search Engines Detail -->
+      <div class="glass p-7 reveal" style="transition-delay:.5s">
+        <div class="flex items-center gap-3 mb-5">
+          <i class="fas fa-database text-[var(--accent)] text-lg"></i>
+          <h4 class="font-display font-bold text-lg">Databases & Search Engines</h4>
+          <span class="ml-auto font-mono text-[10px] text-[var(--muted)]">6 ITEMS</span>
+        </div>
+        <div class="space-y-3">
+          <div class="skill-bar" data-fill="88%">
+            <div class="skill-bar-fill" style="background:var(--accent);width:88%"></div>
+          </div>
+          <div class="exp-row"><span class="text-sm">ElasticSearch</span><span class="font-mono text-[10px] text-[var(--accent)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">PostgreSQL</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">MSSQL</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Redis</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Kibana</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Gunicorn</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+        </div>
+      </div>
+
+      <!-- DevOps & Infrastructure Detail -->
+      <div class="glass p-7 reveal" style="transition-delay:.6s">
+        <div class="flex items-center gap-3 mb-5">
+          <i class="fas fa-gears text-[var(--accent-2)] text-lg"></i>
+          <h4 class="font-display font-bold text-lg">DevOps & Infrastructure</h4>
+          <span class="ml-auto font-mono text-[10px] text-[var(--muted)]">10 ITEMS</span>
+        </div>
+        <div class="space-y-3">
+          <div class="skill-bar" data-fill="91%">
+            <div class="skill-bar-fill" style="background:var(--accent-2);width:91%"></div>
+          </div>
+          <div class="exp-row"><span class="text-sm">Docker</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Kubernetes</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Nginx</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Jenkins</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">ArgoCD</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Terraform</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Git</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">CI/CD</span><span class="font-mono text-[10px] text-[var(--accent-2)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Apache</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Ingress</span><span class="font-mono text-[10px] text-[var(--accent-2)]">ADVANCED</span></div>
+        </div>
+      </div>
+
+      <!-- Data Engineering & ETL Detail -->
+      <div class="glass p-7 reveal" style="transition-delay:.7s">
+        <div class="flex items-center gap-3 mb-5">
+          <i class="fas fa-filter text-[var(--accent-3)] text-lg"></i>
+          <h4 class="font-display font-bold text-lg">Data Engineering & ETL</h4>
+          <span class="ml-auto font-mono text-[10px] text-[var(--muted)]">5 ITEMS</span>
+        </div>
+        <div class="space-y-3">
+          <div class="skill-bar" data-fill="87%">
+            <div class="skill-bar-fill" style="background:var(--accent-3);width:87%"></div>
+          </div>
+          <div class="exp-row"><span class="text-sm">ETL & ELT</span><span class="font-mono text-[10px] text-[var(--accent-3)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Selenium</span><span class="font-mono text-[10px] text-[var(--accent-3)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Scrapy</span><span class="font-mono text-[10px] text-[var(--accent-3)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Nominatim</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Isochrone Services</span><span class="font-mono text-[10px] text-[var(--accent-3)]">ADVANCED</span></div>
+        </div>
+      </div>
+
+      <!-- Networking, Monitoring & Automation Detail -->
+      <div class="glass p-7 reveal" style="transition-delay:.8s">
+        <div class="flex items-center gap-3 mb-5">
+          <i class="fas fa-tower-broadcast text-[var(--accent)] text-lg"></i>
+          <h4 class="font-display font-bold text-lg">Networking, Monitoring & Automation</h4>
+          <span class="ml-auto font-mono text-[10px] text-[var(--muted)]">5 ITEMS</span>
+        </div>
+        <div class="space-y-3">
+          <div class="skill-bar" data-fill="85%">
+            <div class="skill-bar-fill" style="background:var(--accent);width:85%"></div>
+          </div>
+          <div class="exp-row"><span class="text-sm">Load Balancing</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">Monitoring</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+          <div class="exp-row"><span class="text-sm">n8n (Automation)</span><span class="font-mono text-[10px] text-[var(--accent)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">Automation Tools</span><span class="font-mono text-[10px] text-[var(--accent)]">EXPERT</span></div>
+          <div class="exp-row"><span class="text-sm">WordPress Integration</span><span class="font-mono text-[10px] text-[var(--accent)]">ADVANCED</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== PART C: Complete Tag Cloud ===== -->
+    <div class="mt-16 reveal">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-8 h-px bg-[var(--accent)]"></div>
+        <span class="font-mono text-xs tracking-[0.2em] text-[var(--accent)] uppercase">Complete Tag Cloud</span>
+      </div>
+      <div class="glass p-8 md:p-10">
+        <div class="flex flex-wrap gap-2.5">
+          <!-- Programming -->
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Python</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">React.js</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Next.js</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Django</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">JavaScript</span>
+          <!-- AI/ML -->
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">TensorFlow</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">PyTorch</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Keras</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Scikit-Learn</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">BERT</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">OpenCV</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">ML Models</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Predictive Analytics</span>
+          <!-- LLM -->
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">LangChain</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">LangGraph</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">RAG</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">LLM</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">LLM Fine-Tuning</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Agentic AI</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Vector Embedding</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">FAISS</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Pinecone</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">ELK</span>
+          <!-- NLP -->
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">NLP</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Text Classification</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Data Preprocessing</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Feature Engineering</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Model Evaluation</span>
+          <!-- Backend -->
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Django REST Framework</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">FastAPI</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Flask</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Streamlit</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Gunicorn</span>
+          <!-- Databases -->
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">ElasticSearch</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">PostgreSQL</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">MSSQL</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Redis</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Kibana</span>
+          <!-- DevOps -->
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Docker</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Kubernetes</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Nginx</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Apache</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Ingress</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Jenkins</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">ArgoCD</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Terraform</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">Git</span>
+          <span class="tag mint" style="font-size:.8rem;padding:.5rem .9rem">CI/CD</span>
+          <!-- Data Engineering -->
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">ETL & ELT</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Selenium</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Scrapy</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Nominatim</span>
+          <span class="tag coral" style="font-size:.8rem;padding:.5rem .9rem">Isochrone</span>
+          <!-- Automation & Networking -->
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">n8n</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Load Balancing</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Monitoring</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">Automation Tools</span>
+          <span class="tag solid" style="font-size:.8rem;padding:.5rem .9rem">WordPress</span>
         </div>
       </div>
     </div>
@@ -561,11 +744,9 @@
         Three years of<br/><span class="text-grad">shipping AI.</span>
       </h2>
     </div>
-
     <div class="relative">
       <div class="timeline-line hidden md:block"></div>
 
-      <!-- Job 1: Nitol Motors -->
       <div class="grid md:grid-cols-2 gap-8 md:gap-16 mb-16 reveal">
         <div class="md:text-right md:pr-12 relative">
           <div class="tl-dot hidden md:block" style="left:auto;right:-7px;"></div>
@@ -586,7 +767,6 @@
         </div>
       </div>
 
-      <!-- Job 2: Jobdesk Ltd -->
       <div class="grid md:grid-cols-2 gap-8 md:gap-16 mb-16 reveal">
         <div class="md:text-right md:pr-12 md:order-1 order-2 relative">
           <div class="tl-dot hidden md:block" style="left:auto;right:-7px;"></div>
@@ -607,7 +787,6 @@
         </div>
       </div>
 
-      <!-- Job 3: Ishraak -->
       <div class="grid md:grid-cols-2 gap-8 md:gap-16 reveal">
         <div class="md:text-right md:pr-12 relative">
           <div class="tl-dot hidden md:block" style="left:auto;right:-7px;"></div>
@@ -644,7 +823,6 @@
     </div>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- Featured Project -->
       <article class="glass card-hover p-7 md:col-span-2 lg:row-span-2 tilt reveal" style="min-height:340px">
         <div class="tilt-inner h-full flex flex-col">
           <div class="flex items-start justify-between mb-6">
@@ -660,149 +838,90 @@
             Built and deployed a RAG-based system using gpt-oss to match CVs with job descriptions and retrieve the best candidates efficiently. Integrated with ElasticSearch for semantic vector search across large resume datasets.
           </p>
           <div class="flex flex-wrap gap-2">
-            <span class="tag solid">Python</span>
-            <span class="tag solid">gpt-oss</span>
-            <span class="tag solid">RAG</span>
-            <span class="tag">ElasticSearch</span>
-            <span class="tag">Nginx</span>
-            <span class="tag">DevOps</span>
+            <span class="tag solid">Python</span><span class="tag solid">gpt-oss</span><span class="tag solid">RAG</span>
+            <span class="tag">ElasticSearch</span><span class="tag">Nginx</span><span class="tag">DevOps</span>
           </div>
         </div>
       </article>
 
-      <!-- Project 2 -->
       <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.1s">
         <div class="tilt-inner h-full flex flex-col">
-          <div class="flex items-center gap-3 mb-5">
-            <span class="font-mono text-xs text-[var(--accent-2)] tracking-widest">DEPLOYMENT</span>
-          </div>
+          <div class="flex items-center gap-3 mb-5"><span class="font-mono text-xs text-[var(--accent-2)] tracking-widest">DEPLOYMENT</span></div>
           <h3 class="font-display font-bold text-xl mb-3 leading-tight">Ollama (gpt-oss:20b) on vast.ai</h3>
           <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
             Deployed an Ollama-based 20B parameter model in production, responsible for extracting skills and structured data from CVs at scale.
           </p>
-          <div class="flex flex-wrap gap-2">
-            <span class="tag">ML</span>
-            <span class="tag">Python</span>
-            <span class="tag">Nginx</span>
-            <span class="tag">DevOps</span>
-          </div>
+          <div class="flex flex-wrap gap-2"><span class="tag">ML</span><span class="tag">Python</span><span class="tag">Nginx</span><span class="tag">DevOps</span></div>
         </div>
       </article>
 
-      <!-- Project 3 -->
       <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.2s">
         <div class="tilt-inner h-full flex flex-col">
-          <div class="flex items-center gap-3 mb-5">
-            <span class="font-mono text-xs text-[var(--accent-3)] tracking-widest">VISION · LLM</span>
-          </div>
+          <div class="flex items-center gap-3 mb-5"><span class="font-mono text-xs text-[var(--accent-3)] tracking-widest">VISION · LLM</span></div>
           <h3 class="font-display font-bold text-xl mb-3 leading-tight">Gemma 4B Image Explanation</h3>
           <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
             Deployed a Gemma 4B model in production to read images and generate natural-language explanations — powering accessibility and content analysis.
           </p>
-          <div class="flex flex-wrap gap-2">
-            <span class="tag">Gemma</span>
-            <span class="tag">Ollama</span>
-            <span class="tag">Nginx</span>
-            <span class="tag">DevOps</span>
-          </div>
+          <div class="flex flex-wrap gap-2"><span class="tag">Gemma</span><span class="tag">Ollama</span><span class="tag">Nginx</span><span class="tag">DevOps</span></div>
         </div>
       </article>
 
-      <!-- Project 4 -->
       <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.3s">
         <div class="tilt-inner h-full flex flex-col">
-          <div class="flex items-center gap-3 mb-5">
-            <span class="font-mono text-xs text-[var(--accent)] tracking-widest">SEARCH INFRA</span>
-          </div>
+          <div class="flex items-center gap-3 mb-5"><span class="font-mono text-xs text-[var(--accent)] tracking-widest">SEARCH INFRA</span></div>
           <h3 class="font-display font-bold text-xl mb-3 leading-tight">ElasticSearch Cluster · 3 Nodes</h3>
           <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
             Deployed a 3-node ElasticSearch cluster behind NGINX with vector embedding storage and advanced semantic search using custom keywords. Built a Python data ingestion API with Gunicorn.
           </p>
-          <div class="flex flex-wrap gap-2">
-            <span class="tag">ElasticSearch</span>
-            <span class="tag">Kibana</span>
-            <span class="tag">Gunicorn</span>
-            <span class="tag">Python</span>
-          </div>
+          <div class="flex flex-wrap gap-2"><span class="tag">ElasticSearch</span><span class="tag">Kibana</span><span class="tag">Gunicorn</span><span class="tag">Python</span></div>
         </div>
       </article>
 
-      <!-- Project 5 -->
       <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.4s">
         <div class="tilt-inner h-full flex flex-col">
-          <div class="flex items-center gap-3 mb-5">
-            <span class="font-mono text-xs text-[var(--accent-2)] tracking-widest">DEVOPS</span>
-          </div>
+          <div class="flex items-center gap-3 mb-5"><span class="font-mono text-xs text-[var(--accent-2)] tracking-widest">DEVOPS</span></div>
           <h3 class="font-display font-bold text-xl mb-3 leading-tight">CI/CD + Kubernetes Orchestration</h3>
           <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
             Established CI/CD pipelines with Jenkins and Docker, automating build and deployment. Managed Kubernetes clusters for scalable, resilient application updates.
           </p>
-          <div class="flex flex-wrap gap-2">
-            <span class="tag">Docker</span>
-            <span class="tag">Jenkins</span>
-            <span class="tag">Kubernetes</span>
-          </div>
+          <div class="flex flex-wrap gap-2"><span class="tag">Docker</span><span class="tag">Jenkins</span><span class="tag">Kubernetes</span></div>
         </div>
       </article>
 
-      <!-- Project 6 -->
       <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.5s">
         <div class="tilt-inner h-full flex flex-col">
-          <div class="flex items-center gap-3 mb-5">
-            <span class="font-mono text-xs text-[var(--accent-3)] tracking-widest">AUTOMATION</span>
-          </div>
+          <div class="flex items-center gap-3 mb-5"><span class="font-mono text-xs text-[var(--accent-3)] tracking-widest">AUTOMATION</span></div>
           <h3 class="font-display font-bold text-xl mb-3 leading-tight">Automated Gmail with n8n</h3>
           <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
             Deployed an n8n instance to automate Gmail functionalities for candidates — streamlining communication workflows and reducing manual overhead.
           </p>
-          <div class="flex flex-wrap gap-2">
-            <span class="tag">n8n</span>
-            <span class="tag">Gmail API</span>
-            <span class="tag">Automation</span>
-          </div>
+          <div class="flex flex-wrap gap-2"><span class="tag">n8n</span><span class="tag">Gmail API</span><span class="tag">Automation</span></div>
         </div>
       </article>
 
-      <!-- Project 7 -->
       <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.6s">
         <div class="tilt-inner h-full flex flex-col">
-          <div class="flex items-center gap-3 mb-5">
-            <span class="font-mono text-xs text-[var(--accent)] tracking-widest">DATA ENGINEERING</span>
-          </div>
+          <div class="flex items-center gap-3 mb-5"><span class="font-mono text-xs text-[var(--accent)] tracking-widest">DATA ENGINEERING</span></div>
           <h3 class="font-display font-bold text-xl mb-3 leading-tight">Scalable Web Scraping Engine</h3>
           <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
             Built a scalable scraping engine using Scrapy on Nginx, processing structured and unstructured data from 500+ websites. Integrated Selenium for dynamic extraction.
           </p>
-          <div class="flex flex-wrap gap-2">
-            <span class="tag">Python</span>
-            <span class="tag">Scrapy</span>
-            <span class="tag">Selenium</span>
-            <span class="tag">Nginx</span>
-          </div>
+          <div class="flex flex-wrap gap-2"><span class="tag">Python</span><span class="tag">Scrapy</span><span class="tag">Selenium</span><span class="tag">Nginx</span></div>
         </div>
       </article>
 
-      <!-- Project 8 -->
       <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.7s">
         <div class="tilt-inner h-full flex flex-col">
-          <div class="flex items-center gap-3 mb-5">
-            <span class="font-mono text-xs text-[var(--accent-2)] tracking-widest">LLM DEPLOYMENT</span>
-          </div>
+          <div class="flex items-center gap-3 mb-5"><span class="font-mono text-xs text-[var(--accent-2)] tracking-widest">LLM DEPLOYMENT</span></div>
           <h3 class="font-display font-bold text-xl mb-3 leading-tight">Ollama (LLAMA2) on Nginx</h3>
           <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
             Deployed an Ollama-based LLAMA2 model in production behind Nginx, responsible for regenerating and refining job descriptions automatically.
           </p>
-          <div class="flex flex-wrap gap-2">
-            <span class="tag">ML</span>
-            <span class="tag">Python</span>
-            <span class="tag">llama2</span>
-            <span class="tag">Nginx</span>
-          </div>
+          <div class="flex flex-wrap gap-2"><span class="tag">ML</span><span class="tag">Python</span><span class="tag">llama2</span><span class="tag">Nginx</span></div>
         </div>
       </article>
     </div>
 
-    <!-- More projects note -->
     <div class="mt-10 text-center reveal">
       <p class="font-mono text-xs text-[var(--muted)] tracking-widest">+ 6 MORE PROJECTS INCLUDING REDIS CACHING · DOCUMENT PROCESSING SUITE · GEOLOCATION SERVICES</p>
     </div>
@@ -818,9 +937,7 @@
         Education &<br/><span class="text-grad">achievements.</span>
       </h2>
     </div>
-
     <div class="grid md:grid-cols-12 gap-8">
-      <!-- Education -->
       <div class="md:col-span-7 space-y-5">
         <div class="glass card-hover p-7 reveal-l">
           <div class="flex items-start gap-5">
@@ -841,7 +958,6 @@
             </div>
           </div>
         </div>
-
         <div class="glass card-hover p-7 reveal-l" style="transition-delay:.1s">
           <div class="flex items-start gap-5">
             <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[var(--accent-3)]/10 border border-[var(--accent-3)]/30">
@@ -857,7 +973,6 @@
             </div>
           </div>
         </div>
-
         <div class="glass card-hover p-7 reveal-l" style="transition-delay:.2s">
           <div class="flex items-start gap-5">
             <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[var(--accent-2)]/10 border border-[var(--accent-2)]/30">
@@ -874,8 +989,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Certifications -->
       <div class="md:col-span-5 space-y-5">
         <div class="glass p-7 reveal-r" style="background:linear-gradient(135deg,rgba(197,255,61,0.06) 0%,rgba(255,107,61,0.03) 100%);border-color:rgba(197,255,61,0.2)">
           <div class="flex items-center gap-3 mb-5">
@@ -885,21 +998,14 @@
           <div class="space-y-4">
             <div class="flex items-start gap-3 pb-4 border-b border-[var(--border)]">
               <i class="fas fa-circle-check text-[var(--accent)] mt-1 text-sm"></i>
-              <div>
-                <p class="font-semibold">Elasticsearch 8 Certification</p>
-                <p class="text-xs text-[var(--muted)] mt-1">Udemy · Professional</p>
-              </div>
+              <div><p class="font-semibold">Elasticsearch 8 Certification</p><p class="text-xs text-[var(--muted)] mt-1">Udemy · Professional</p></div>
             </div>
             <div class="flex items-start gap-3">
               <i class="fas fa-circle-check text-[var(--accent)] mt-1 text-sm"></i>
-              <div>
-                <p class="font-semibold">IELTS · Score 6.0</p>
-                <p class="text-xs text-[var(--muted)] mt-1">British Council</p>
-              </div>
+              <div><p class="font-semibold">IELTS · Score 6.0</p><p class="text-xs text-[var(--muted)] mt-1">British Council</p></div>
             </div>
           </div>
         </div>
-
         <div class="glass p-7 reveal-r" style="transition-delay:.1s">
           <div class="flex items-center gap-3 mb-5">
             <i class="fas fa-language text-[var(--accent-3)] text-xl"></i>
@@ -907,21 +1013,15 @@
           </div>
           <div class="space-y-3">
             <div>
-              <div class="flex justify-between text-sm mb-1">
-                <span>Bengali</span><span class="text-[var(--muted)]">Native</span>
-              </div>
+              <div class="flex justify-between text-sm mb-1"><span>Bengali</span><span class="text-[var(--muted)]">Native</span></div>
               <div class="h-1 bg-[var(--border)] rounded-full overflow-hidden"><div class="h-full bg-[var(--accent)]" style="width:100%"></div></div>
             </div>
             <div>
-              <div class="flex justify-between text-sm mb-1">
-                <span>English</span><span class="text-[var(--muted)]">Professional</span>
-              </div>
+              <div class="flex justify-between text-sm mb-1"><span>English</span><span class="text-[var(--muted)]">Professional</span></div>
               <div class="h-1 bg-[var(--border)] rounded-full overflow-hidden"><div class="h-full bg-[var(--accent-3)]" style="width:80%"></div></div>
             </div>
             <div>
-              <div class="flex justify-between text-sm mb-1">
-                <span>Hindi</span><span class="text-[var(--muted)]">Conversational</span>
-              </div>
+              <div class="flex justify-between text-sm mb-1"><span>Hindi</span><span class="text-[var(--muted)]">Conversational</span></div>
               <div class="h-1 bg-[var(--border)] rounded-full overflow-hidden"><div class="h-full bg-[var(--accent-2)]" style="width:60%"></div></div>
             </div>
           </div>
@@ -935,10 +1035,8 @@
 <section id="contact" class="py-24 md:py-36 px-6 md:px-10 relative">
   <div class="max-w-7xl mx-auto">
     <div class="glass p-10 md:p-16 reveal relative overflow-hidden" style="background:linear-gradient(135deg,rgba(21,21,28,0.8) 0%,rgba(21,21,28,0.5) 100%)">
-      <!-- Decorative -->
       <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full" style="background:radial-gradient(circle,rgba(197,255,61,0.12) 0%,transparent 70%)"></div>
       <div class="absolute -bottom-20 -left-20 w-72 h-72 rounded-full" style="background:radial-gradient(circle,rgba(255,107,61,0.1) 0%,transparent 70%)"></div>
-
       <div class="relative grid md:grid-cols-12 gap-10">
         <div class="md:col-span-7">
           <span class="section-num">06 / CONTACT</span>
@@ -952,52 +1050,26 @@
             <i class="fas fa-paper-plane"></i> aniklpu01@gmail.com
           </a>
         </div>
-
         <div class="md:col-span-5 space-y-5">
           <div class="flex items-start gap-4">
-            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
-              <i class="fas fa-phone text-[var(--accent)] text-sm"></i>
-            </div>
-            <div>
-              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">Phone</p>
-              <a href="tel:+8801627220072" class="a-link">+880 1627 220072</a>
-            </div>
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]"><i class="fas fa-phone text-[var(--accent)] text-sm"></i></div>
+            <div><p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">Phone</p><a href="tel:+8801627220072" class="a-link">+880 1627 220072</a></div>
           </div>
           <div class="flex items-start gap-4">
-            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
-              <i class="fas fa-location-dot text-[var(--accent-3)] text-sm"></i>
-            </div>
-            <div>
-              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">Location</p>
-              <p>Nikunja 2, Dhaka, Bangladesh</p>
-            </div>
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]"><i class="fas fa-location-dot text-[var(--accent-3)] text-sm"></i></div>
+            <div><p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">Location</p><p>Nikunja 2, Dhaka, Bangladesh</p></div>
           </div>
           <div class="flex items-start gap-4">
-            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
-              <i class="fab fa-github text-[var(--fg)] text-sm"></i>
-            </div>
-            <div>
-              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">GitHub</p>
-              <a href="https://github.com/anikpy" target="_blank" class="a-link">github.com/anikpy</a>
-            </div>
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]"><i class="fab fa-github text-[var(--fg)] text-sm"></i></div>
+            <div><p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">GitHub</p><a href="https://github.com/anikpy" target="_blank" class="a-link">github.com/anikpy</a></div>
           </div>
           <div class="flex items-start gap-4">
-            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
-              <i class="fab fa-linkedin text-[var(--accent-2)] text-sm"></i>
-            </div>
-            <div>
-              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">LinkedIn</p>
-              <a href="https://www.linkedin.com/in/md-arifur-rahman-anik-a32232172/" target="_blank" class="a-link">md-arifur-rahman-anik</a>
-            </div>
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]"><i class="fab fa-linkedin text-[var(--accent-2)] text-sm"></i></div>
+            <div><p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">LinkedIn</p><a href="https://www.linkedin.com/in/md-arifur-rahman-anik-a32232172/" target="_blank" class="a-link">md-arifur-rahman-anik</a></div>
           </div>
           <div class="flex items-start gap-4">
-            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
-              <i class="fas fa-globe text-[var(--accent)] text-sm"></i>
-            </div>
-            <div>
-              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">Portfolio</p>
-              <a href="https://anikpy.github.io/MyPortfolio/" target="_blank" class="a-link">anikpy.github.io</a>
-            </div>
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]"><i class="fas fa-globe text-[var(--accent)] text-sm"></i></div>
+            <div><p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">Portfolio</p><a href="https://anikpy.github.io/MyPortfolio/" target="_blank" class="a-link">anikpy.github.io</a></div>
           </div>
         </div>
       </div>
@@ -1005,7 +1077,6 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="border-t border-[var(--border)] py-10 px-6 md:px-10 relative">
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
     <p class="font-mono text-xs text-[var(--muted)] tracking-widest">© 2025 MD ARIFUR RAHMAN ANIK · AI/ML & DEVOPS</p>
@@ -1022,12 +1093,11 @@
 <script type="module">
 import * as THREE from 'three';
 
-/* ====== LOADER ====== */
 window.addEventListener('load', () => {
   setTimeout(() => document.getElementById('loader').classList.add('gone'), 900);
 });
 
-/* ====== CUSTOM CURSOR ====== */
+/* CURSOR */
 const dot = document.querySelector('.cursor-dot');
 const ring = document.querySelector('.cursor-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
@@ -1047,7 +1117,7 @@ document.querySelectorAll('a, button, .tilt, .magnetic').forEach(el => {
   el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
 });
 
-/* ====== MAGNETIC BUTTONS ====== */
+/* MAGNETIC */
 document.querySelectorAll('.magnetic').forEach(el => {
   el.addEventListener('mousemove', e => {
     const rect = el.getBoundingClientRect();
@@ -1055,12 +1125,10 @@ document.querySelectorAll('.magnetic').forEach(el => {
     const y = e.clientY - rect.top - rect.height/2;
     el.style.transform = `translate(${x*0.2}px,${y*0.2}px)`;
   });
-  el.addEventListener('mouseleave', () => {
-    el.style.transform = '';
-  });
+  el.addEventListener('mouseleave', () => { el.style.transform = ''; });
 });
 
-/* ====== MOBILE MENU ====== */
+/* MOBILE MENU */
 const menuBtn = document.getElementById('menuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 menuBtn?.addEventListener('click', () => {
@@ -1074,17 +1142,23 @@ document.querySelectorAll('.mobile-link').forEach(l => {
   });
 });
 
-/* ====== SCROLL REVEAL ====== */
+/* SCROLL REVEAL */
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('in');
-    }
+    if (entry.isIntersecting) entry.target.classList.add('in');
   });
 }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 document.querySelectorAll('.reveal, .reveal-l, .reveal-r').forEach(el => observer.observe(el));
 
-/* ====== COUNTERS ====== */
+/* SKILL BARS */
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('in');
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll('.skill-bar').forEach(el => barObserver.observe(el));
+
+/* COUNTERS */
 const counterObs = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -1108,7 +1182,7 @@ const counterObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.5 });
 document.querySelectorAll('.counter').forEach(el => counterObs.observe(el));
 
-/* ====== 3D TILT ON PROJECT CARDS ====== */
+/* TILT */
 document.querySelectorAll('.tilt').forEach(card => {
   card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect();
@@ -1116,12 +1190,10 @@ document.querySelectorAll('.tilt').forEach(card => {
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     card.style.transform = `perspective(1000px) rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-4px)`;
   });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
 });
 
-/* ====== THREE.JS SCENE ====== */
+/* THREE.JS */
 const canvas = document.getElementById('scene');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -1133,15 +1205,12 @@ scene.fog = new THREE.FogExp2(0x0a0a0d, 0.05);
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
 camera.position.set(0, 0, 14);
 
-/* --- Particle neural network --- */
 const particleCount = window.innerWidth < 768 ? 90 : 180;
 const positions = new Float32Array(particleCount * 3);
 const velocities = new Float32Array(particleCount * 3);
 const baseColors = [
-  new THREE.Color(0xc5ff3d),
-  new THREE.Color(0xff6b3d),
-  new THREE.Color(0x52e5d4),
-  new THREE.Color(0xf4efe4),
+  new THREE.Color(0xc5ff3d), new THREE.Color(0xff6b3d),
+  new THREE.Color(0x52e5d4), new THREE.Color(0xf4efe4),
 ];
 const colors = new Float32Array(particleCount * 3);
 
@@ -1152,15 +1221,11 @@ for (let i = 0; i < particleCount; i++) {
   positions[i*3]   = r * Math.sin(phi) * Math.cos(theta);
   positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
   positions[i*3+2] = r * Math.cos(phi) - 3;
-
   velocities[i*3]   = (Math.random() - 0.5) * 0.01;
   velocities[i*3+1] = (Math.random() - 0.5) * 0.01;
   velocities[i*3+2] = (Math.random() - 0.5) * 0.01;
-
   const c = baseColors[Math.floor(Math.random() * baseColors.length)];
-  colors[i*3] = c.r;
-  colors[i*3+1] = c.g;
-  colors[i*3+2] = c.b;
+  colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
 }
 
 const pGeo = new THREE.BufferGeometry();
@@ -1168,19 +1233,12 @@ pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 pGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
 const pMat = new THREE.PointsMaterial({
-  size: 0.08,
-  vertexColors: true,
-  transparent: true,
-  opacity: 0.9,
-  blending: THREE.AdditiveBlending,
-  depthWrite: false,
-  sizeAttenuation: true
+  size: 0.08, vertexColors: true, transparent: true, opacity: 0.9,
+  blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
 });
-
 const points = new THREE.Points(pGeo, pMat);
 scene.add(points);
 
-/* --- Connection lines --- */
 const lineMax = 280;
 const linePositions = new Float32Array(lineMax * 6);
 const lineColors = new Float32Array(lineMax * 6);
@@ -1188,19 +1246,13 @@ const lineGeo = new THREE.BufferGeometry();
 lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
 lineGeo.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
 const lineMat = new THREE.LineBasicMaterial({
-  vertexColors: true,
-  transparent: true,
-  opacity: 0.35,
-  blending: THREE.AdditiveBlending,
-  depthWrite: false
+  vertexColors: true, transparent: true, opacity: 0.35,
+  blending: THREE.AdditiveBlending, depthWrite: false
 });
 const lines = new THREE.LineSegments(lineGeo, lineMat);
 scene.add(lines);
 
-/* --- Wireframe shapes --- */
 const shapes = [];
-
-// Central icosahedron
 const icoGeo = new THREE.IcosahedronGeometry(2.4, 1);
 const icoWire = new THREE.LineSegments(
   new THREE.EdgesGeometry(icoGeo),
@@ -1210,7 +1262,6 @@ icoWire.position.set(0, 0, -2);
 scene.add(icoWire);
 shapes.push({ obj: icoWire, rx: 0.001, ry: 0.002, rz: 0 });
 
-// Torus
 const torusGeo = new THREE.TorusGeometry(3.5, 0.05, 8, 64);
 const torusWire = new THREE.LineSegments(
   new THREE.EdgesGeometry(torusGeo),
@@ -1220,7 +1271,6 @@ torusWire.position.set(0, 0, -2);
 scene.add(torusWire);
 shapes.push({ obj: torusWire, rx: 0.0015, ry: 0, rz: 0.001 });
 
-// Outer octahedron
 const octaGeo = new THREE.OctahedronGeometry(5, 0);
 const octaWire = new THREE.LineSegments(
   new THREE.EdgesGeometry(octaGeo),
@@ -1230,42 +1280,29 @@ octaWire.position.set(0, 0, -2);
 scene.add(octaWire);
 shapes.push({ obj: octaWire, rx: 0, ry: -0.001, rz: 0.0005 });
 
-/* --- Mouse parallax --- */
-let mouseX = 0, mouseY = 0;
-let targetX = 0, targetY = 0;
+let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
 window.addEventListener('mousemove', e => {
   mouseX = (e.clientX / window.innerWidth - 0.5);
   mouseY = (e.clientY / window.innerHeight - 0.5);
 });
 
-/* --- Scroll-driven Z movement --- */
 let scrollY = 0;
-window.addEventListener('scroll', () => {
-  scrollY = window.scrollY;
-});
+window.addEventListener('scroll', () => { scrollY = window.scrollY; });
 
-/* --- Animation loop --- */
 const clock = new THREE.Clock();
 function animate(){
   const t = clock.getElapsedTime();
-
-  // Update particles
   const posAttr = pGeo.attributes.position;
   for (let i = 0; i < particleCount; i++) {
     posAttr.array[i*3]   += velocities[i*3];
     posAttr.array[i*3+1] += velocities[i*3+1];
     posAttr.array[i*3+2] += velocities[i*3+2];
-
-    // Wrap
     for (let j = 0; j < 3; j++) {
-      if (Math.abs(posAttr.array[i*3+j]) > 15) {
-        posAttr.array[i*3+j] *= -0.9;
-      }
+      if (Math.abs(posAttr.array[i*3+j]) > 15) posAttr.array[i*3+j] *= -0.9;
     }
   }
   posAttr.needsUpdate = true;
 
-  // Update lines (connect nearby particles)
   let lineCount = 0;
   const maxDist = 3.5;
   const maxDistSq = maxDist * maxDist;
@@ -1284,7 +1321,6 @@ function animate(){
         linePositions[idx+3] = posAttr.array[j*3];
         linePositions[idx+4] = posAttr.array[j*3+1];
         linePositions[idx+5] = posAttr.array[j*3+2];
-
         lineColors[idx]   = colors[i*3] * alpha;
         lineColors[idx+1] = colors[i*3+1] * alpha;
         lineColors[idx+2] = colors[i*3+2] * alpha;
@@ -1295,26 +1331,15 @@ function animate(){
       }
     }
   }
-  // Hide unused
-  for (let i = lineCount * 6; i < lineMax * 6; i++) {
-    linePositions[i] = 0;
-  }
+  for (let i = lineCount * 6; i < lineMax * 6; i++) linePositions[i] = 0;
   lineGeo.attributes.position.needsUpdate = true;
   lineGeo.attributes.color.needsUpdate = true;
   lineGeo.setDrawRange(0, lineCount * 2);
 
-  // Rotate shapes
-  shapes.forEach(s => {
-    s.obj.rotation.x += s.rx;
-    s.obj.rotation.y += s.ry;
-    s.obj.rotation.z += s.rz;
-  });
-
-  // Subtle points rotation
+  shapes.forEach(s => { s.obj.rotation.x += s.rx; s.obj.rotation.y += s.ry; s.obj.rotation.z += s.rz; });
   points.rotation.y = t * 0.05;
   points.rotation.x = Math.sin(t * 0.1) * 0.1;
 
-  // Camera parallax
   targetX += (mouseX * 2 - targetX) * 0.04;
   targetY += (mouseY * 2 - targetY) * 0.04;
   camera.position.x = targetX;
@@ -1327,14 +1352,12 @@ function animate(){
 }
 animate();
 
-/* --- Resize --- */
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-/* --- Reduced motion --- */
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   renderer.setAnimationLoop(null);
 }
