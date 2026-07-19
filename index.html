@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Md Arifur Rahman Anik — AI/ML & DevOps Engineer</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<meta name="description" content="Portfolio of Md Arifur Rahman Anik — AI Fullstack Developer specializing in scalable ML systems, LLMs, RAG, and cloud deployments." />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <script type="importmap">
@@ -21,330 +24,383 @@
 
 <style>
   :root{
-    --bg:#070617;
-    --bg2:#0d0a2c;
-    --ink:#f4f4ff;
-    --muted:#9a9bc7;
-    --c1:#ff2d95;  /* hot pink */
-    --c2:#7c3aed;  /* violet */
-    --c3:#06b6d4;  /* cyan */
-    --c4:#f59e0b;  /* amber */
-    --c5:#22d3ee;  /* sky */
-    --c6:#a3e635;  /* lime */
+    --bg:#0a0a0d;
+    --bg-2:#101015;
+    --elev:#15151c;
+    --fg:#f4efe4;
+    --muted:#8a8a92;
+    --dim:#5a5a62;
+    --accent:#c5ff3d;     /* electric lime */
+    --accent-2:#ff6b3d;   /* warm coral */
+    --accent-3:#52e5d4;   /* mint teal */
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.16);
   }
-  *{ -webkit-font-smoothing:antialiased; }
-  html,body{ background:var(--bg); color:var(--ink); font-family:'Outfit',sans-serif; overflow-x:hidden; }
-  .font-display{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.02em;}
-  .font-mono{ font-family:'JetBrains Mono', monospace;}
-  
-  /* 3D canvas behind */
-  #bg3d{ position:fixed; inset:0; z-index:0; pointer-events:none;}
-  
-  /* Aurora blobs */
-  .aurora{
-    position:fixed; border-radius:50%; filter:blur(80px); opacity:.5; z-index:0; pointer-events:none;
-    animation:float 14s ease-in-out infinite;
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--fg);
+    font-family:'Manrope',sans-serif;
+    font-weight:400;
+    overflow-x:hidden;
+    cursor:none;
   }
-  @keyframes float{
-    0%,100%{ transform:translate(0,0) scale(1);}
-    50%{ transform:translate(40px,-30px) scale(1.15);}
+  /* Noise overlay */
+  body::before{
+    content:'';
+    position:fixed;inset:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.9 0 0 0 0 0.9 0 0 0 0.18 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    opacity:0.4;
+    pointer-events:none;
+    z-index:9999;
+    mix-blend-mode:overlay;
   }
-  
-  /* gradient text */
-  .grad-text{
-    background:linear-gradient(120deg,var(--c1),var(--c2) 40%,var(--c3) 75%, var(--c4));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    background-size:200% 200%;
-    animation:shift 8s ease infinite;
+  .font-display{font-family:'Syne',sans-serif;letter-spacing:-0.02em}
+  .font-mono{font-family:'JetBrains Mono',monospace}
+
+  /* Custom cursor */
+  .cursor-dot,.cursor-ring{
+    position:fixed;top:0;left:0;
+    pointer-events:none;
+    z-index:10000;
+    border-radius:50%;
+    transition:transform .15s ease,width .25s ease,height .25s ease,background .25s ease;
+    transform:translate(-50%,-50%);
+    mix-blend-mode:difference;
   }
-  @keyframes shift{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
-  
-  /* glass card */
+  .cursor-dot{width:6px;height:6px;background:var(--accent);}
+  .cursor-ring{width:36px;height:36px;border:1px solid rgba(245,239,228,0.4);}
+  .cursor-ring.hover{width:60px;height:60px;background:rgba(197,255,61,0.08);border-color:var(--accent);}
+
+  /* Three canvas */
+  #scene{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
+  .grain-overlay{position:fixed;inset:0;pointer-events:none;z-index:1;
+    background:radial-gradient(ellipse at 50% 0%,transparent 40%,rgba(10,10,13,0.6) 100%);
+  }
+
+  /* Animations */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes slideLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes slideRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes pulseDot{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @keyframes rotateSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:translateY(0)}
+  .reveal-l{opacity:0;transform:translateX(-40px);transition:opacity .9s,transform .9s}
+  .reveal-l.in{opacity:1;transform:translateX(0)}
+  .reveal-r{opacity:0;transform:translateX(40px);transition:opacity .9s,transform .9s}
+  .reveal-r.in{opacity:1;transform:translateX(0)}
+
+  .marquee{display:flex;animation:marquee 40s linear infinite;width:max-content}
+
+  /* Gradient text */
+  .text-grad{
+    background:linear-gradient(120deg,var(--accent) 0%,var(--accent-3) 50%,var(--accent-2) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .text-shimmer{
+    background:linear-gradient(90deg,var(--fg) 0%,var(--accent) 50%,var(--fg) 100%);
+    background-size:200% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:shimmer 6s linear infinite;
+  }
+
+  /* Buttons */
+  .btn{
+    position:relative;
+    display:inline-flex;align-items:center;gap:.6rem;
+    padding:.95rem 1.6rem;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.78rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
+    border:1px solid var(--border-strong);
+    color:var(--fg);background:rgba(255,255,255,0.02);
+    border-radius:2px;
+    transition:all .35s cubic-bezier(.2,.7,.2,1);
+    overflow:hidden;
+  }
+  .btn::before{
+    content:'';position:absolute;inset:0;
+    background:var(--accent);
+    transform:translateY(101%);
+    transition:transform .45s cubic-bezier(.2,.7,.2,1);
+    z-index:-1;
+  }
+  .btn:hover{color:#0a0a0d;border-color:var(--accent);}
+  .btn:hover::before{transform:translateY(0)}
+  .btn.accent{background:var(--accent);color:#0a0a0d;border-color:var(--accent);}
+  .btn.accent::before{background:#0a0a0d;}
+  .btn.accent:hover{color:var(--accent);}
+
+  /* Cards */
   .glass{
-    background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    border:1px solid rgba(255,255,255,0.10);
+    background:rgba(21,21,28,0.55);
     backdrop-filter:blur(14px);
     -webkit-backdrop-filter:blur(14px);
+    border:1px solid var(--border);
   }
-  .glass-hover{ transition:transform .45s cubic-bezier(.2,.7,.2,1), border-color .3s, box-shadow .4s; }
-  .glass-hover:hover{
-    transform:translateY(-6px) rotateX(4deg) rotateY(-4deg);
-    border-color:rgba(255,45,149,.45);
-    box-shadow:0 30px 60px -20px rgba(124,58,237,.35), 0 0 0 1px rgba(255,45,149,.2);
-  }
-  
-  /* nav */
-  .nav-pill{
-    background:rgba(13,10,44,.6); border:1px solid rgba(255,255,255,.08);
-    backdrop-filter:blur(12px);
-  }
-  
-  /* tilt-on-hover wrapper handled via JS for cards */
-  
-  /* marquee */
-  .marquee{ display:flex; gap:3rem; animation:marq 30s linear infinite; }
-  @keyframes marq{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
-  
-  /* reveal */
-  .reveal{ opacity:0; transform:translateY(40px); transition:all .9s cubic-bezier(.2,.7,.2,1); }
-  .reveal.in{ opacity:1; transform:none; }
-  
-  /* skill chip */
-  .chip{
-    background:linear-gradient(135deg, rgba(255,45,149,.12), rgba(124,58,237,.12));
-    border:1px solid rgba(255,255,255,.12);
+  .card-hover{transition:transform .5s cubic-bezier(.2,.7,.2,1),border-color .5s,background .5s}
+  .card-hover:hover{transform:translateY(-6px);border-color:var(--border-strong);background:rgba(21,21,28,0.85);}
+
+  /* Tech tag */
+  .tag{
+    display:inline-flex;align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.68rem;font-weight:500;letter-spacing:0.04em;
+    padding:.35rem .7rem;
+    color:var(--muted);
+    border:1px solid var(--border);
+    border-radius:2px;
+    background:rgba(255,255,255,0.02);
     transition:all .3s;
   }
-  .chip:hover{
-    transform:translateY(-3px) scale(1.05);
-    background:linear-gradient(135deg, rgba(255,45,149,.3), rgba(6,182,212,.3));
-    border-color:rgba(255,45,149,.5);
-    box-shadow:0 10px 30px -10px rgba(255,45,149,.5);
+  .tag:hover{color:var(--accent);border-color:var(--accent);}
+  .tag.solid{color:var(--accent);border-color:rgba(197,255,61,0.3);background:rgba(197,255,61,0.05);}
+
+  /* Section heading */
+  .section-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    letter-spacing:0.2em;
+    display:inline-flex;align-items:center;gap:.6rem;
   }
-  
-  /* timeline */
-  .tl-line{
-    background:linear-gradient(180deg, var(--c1), var(--c2) 40%, var(--c3) 80%, transparent);
+  .section-num::before{
+    content:'';width:32px;height:1px;background:var(--accent);
   }
-  
-  /* project card glow border */
-  .pcard{ position:relative; overflow:hidden; }
-  .pcard::before{
-    content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px;
-    background:linear-gradient(135deg, var(--c1), var(--c2), var(--c3), var(--c4));
-    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude;
-    opacity:0; transition:opacity .4s;
+
+  /* Timeline */
+  .timeline-line{
+    position:absolute;left:50%;top:0;bottom:0;width:1px;
+    background:linear-gradient(to bottom,transparent 0%,var(--border-strong) 8%,var(--border-strong) 92%,transparent 100%);
+    transform:translateX(-50%);
   }
-  .pcard:hover::before{ opacity:1; }
-  .pcard::after{
-    content:''; position:absolute; width:200px; height:200px; border-radius:50%;
-    background:radial-gradient(circle, rgba(255,45,149,.25), transparent 70%);
-    top:var(--my,50%); left:var(--mx,50%); transform:translate(-50%,-50%);
-    opacity:0; transition:opacity .4s; pointer-events:none;
+  .tl-dot{
+    width:14px;height:14px;border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--accent);
+    position:absolute;left:50%;top:8px;transform:translateX(-50%);
+    box-shadow:0 0 0 6px rgba(197,255,61,0.08);
   }
-  .pcard:hover::after{ opacity:1; }
-  
-  /* button */
-  .btn-grad{
-    background:linear-gradient(120deg, var(--c1), var(--c2) 60%, var(--c3));
-    background-size:200% 100%; transition:all .4s;
+
+  /* Project card tilt */
+  .tilt{transform-style:preserve-3d;transition:transform .2s ease-out;}
+  .tilt-inner{transform:translateZ(40px);}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:8px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:#26262e;border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+  /* Selection */
+  ::selection{background:var(--accent);color:#0a0a0d;}
+
+  /* Loader */
+  #loader{position:fixed;inset:0;background:var(--bg);z-index:10001;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;transition:opacity .8s,visibility .8s;}
+  #loader.gone{opacity:0;visibility:hidden;}
+  .loader-bar{width:200px;height:1px;background:rgba(255,255,255,0.1);overflow:hidden;}
+  .loader-bar div{height:100%;background:var(--accent);animation:load 1.4s ease-in-out forwards;}
+  @keyframes load{0%{width:0%}100%{width:100%}}
+
+  /* Hide cursor on touch */
+  @media (max-width:768px){
+    body{cursor:auto}
+    .cursor-dot,.cursor-ring{display:none}
   }
-  .btn-grad:hover{ background-position:100% 0; box-shadow:0 14px 40px -10px rgba(255,45,149,.6); transform:translateY(-2px); }
-  
-  /* scrollbar */
-  ::-webkit-scrollbar{ width:10px; }
-  ::-webkit-scrollbar-track{ background:#070617; }
-  ::-webkit-scrollbar-thumb{ background:linear-gradient(var(--c1), var(--c2)); border-radius:10px;}
-  
-  /* hero grid bg */
-  .grid-bg{
-    background-image:
-      linear-gradient(rgba(124,58,237,.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(124,58,237,.06) 1px, transparent 1px);
-    background-size:60px 60px;
-    mask-image:radial-gradient(ellipse at center, #000 30%, transparent 75%);
+
+  /* Hero name outline */
+  .name-outline{
+    -webkit-text-stroke:1.5px var(--fg);
+    color:transparent;
   }
-  
-  /* glowing dot */
-  .dot{ width:8px; height:8px; border-radius:50%; background:var(--c6); box-shadow:0 0 12px var(--c6); animation:pulse 1.6s infinite;}
-  @keyframes pulse{ 0%,100%{ opacity:1; transform:scale(1);} 50%{opacity:.4; transform:scale(.7);} }
-  
-  /* badge spin */
-  .spin-slow{ animation:spin 20s linear infinite; }
-  @keyframes spin{ to{ transform:rotate(360deg);} }
-  
-  /* nav active */
-  .nav-link{ position:relative; }
-  .nav-link::after{
-    content:''; position:absolute; left:0; bottom:-6px; width:0; height:2px;
-    background:linear-gradient(90deg,var(--c1),var(--c3)); transition:width .3s;
+  @media (max-width:640px){
+    .name-outline{-webkit-text-stroke:1px var(--fg);}
   }
-  .nav-link:hover::after, .nav-link.active::after{ width:100%; }
-  
-  @media (prefers-reduced-motion: reduce){
-    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
+
+  /* Floating badge */
+  .badge-float{animation:float 4s ease-in-out infinite;}
+
+  /* Magnetic */
+  .magnetic{transition:transform .25s cubic-bezier(.2,.7,.2,1);}
+
+  /* Bento */
+  .bento-card{position:relative;overflow:hidden;border-radius:4px;}
+
+  /* Animated underline link */
+  .a-link{position:relative;color:var(--fg);text-decoration:none;}
+  .a-link::after{
+    content:'';position:absolute;left:0;bottom:-2px;width:100%;height:1px;
+    background:var(--accent);transform:scaleX(0);transform-origin:right;
+    transition:transform .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .a-link:hover::after{transform:scaleX(1);transform-origin:left;}
+
+  /* Mobile nav */
+  #mobileMenu{transform:translateX(100%);transition:transform .5s cubic-bezier(.2,.7,.2,1);}
+  #mobileMenu.open{transform:translateX(0);}
+
+  /* Counter */
+  .counter-line{
+    width:40px;height:1px;background:var(--accent);margin-bottom:.5rem;
   }
 </style>
 </head>
-<body class="relative">
+<body>
 
-<!-- 3D background canvas -->
-<canvas id="bg3d"></canvas>
+<!-- LOADER -->
+<div id="loader">
+  <div class="font-mono text-xs tracking-[0.3em] text-[var(--muted)]">LOADING SCENE</div>
+  <div class="loader-bar"><div></div></div>
+</div>
 
-<!-- Aurora blobs -->
-<div class="aurora" style="width:520px; height:520px; background:#ff2d95; top:-120px; left:-120px;"></div>
-<div class="aurora" style="width:480px; height:480px; background:#7c3aed; top:30%; right:-140px; animation-delay:-4s;"></div>
-<div class="aurora" style="width:420px; height:420px; background:#06b6d4; bottom:-120px; left:30%; animation-delay:-8s;"></div>
+<!-- CURSOR -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
 
-<!-- Grid overlay -->
-<div class="fixed inset-0 grid-bg pointer-events-none" style="z-index:0;"></div>
+<!-- 3D SCENE -->
+<canvas id="scene"></canvas>
+<div class="grain-overlay"></div>
 
 <!-- NAV -->
-<header class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
-  <nav class="nav-pill rounded-full px-3 py-2 flex items-center gap-1 text-sm">
-    <a href="#home" class="px-4 py-2 rounded-full font-medium nav-link active">Home</a>
-    <a href="#about" class="px-4 py-2 rounded-full font-medium nav-link">About</a>
-    <a href="#skills" class="px-4 py-2 rounded-full font-medium nav-link">Skills</a>
-    <a href="#experience" class="px-4 py-2 rounded-full font-medium nav-link">Experience</a>
-    <a href="#projects" class="px-4 py-2 rounded-full font-medium nav-link">Projects</a>
-    <a href="#education" class="px-4 py-2 rounded-full font-medium nav-link">Education</a>
-    <a href="#contact" class="px-4 py-2 rounded-full font-medium btn-grad text-white">Contact</a>
-  </nav>
-</header>
+<nav class="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-5 flex items-center justify-between mix-blend-difference">
+  <a href="#hero" class="font-display font-bold text-lg tracking-tighter text-white magnetic">
+    ANIK<span style="color:var(--accent)">.</span>
+  </a>
+  <div class="hidden md:flex items-center gap-9 font-mono text-xs tracking-[0.15em] uppercase text-white/80">
+    <a href="#about" class="a-link magnetic">About</a>
+    <a href="#skills" class="a-link magnetic">Skills</a>
+    <a href="#experience" class="a-link magnetic">Work</a>
+    <a href="#projects" class="a-link magnetic">Projects</a>
+    <a href="#contact" class="a-link magnetic">Contact</a>
+  </div>
+  <a href="#contact" class="hidden md:inline-flex btn magnetic" style="border-color:rgba(255,255,255,0.3);">
+    <span class="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse"></span>
+    Available
+  </a>
+  <button id="menuBtn" class="md:hidden text-white text-xl magnetic" aria-label="Menu"><i class="fas fa-bars"></i></button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mobileMenu" class="fixed inset-0 z-40 bg-[var(--bg)]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden">
+  <a href="#about" class="font-display text-3xl text-white mobile-link">About</a>
+  <a href="#skills" class="font-display text-3xl text-white mobile-link">Skills</a>
+  <a href="#experience" class="font-display text-3xl text-white mobile-link">Work</a>
+  <a href="#projects" class="font-display text-3xl text-white mobile-link">Projects</a>
+  <a href="#contact" class="font-display text-3xl text-white mobile-link">Contact</a>
+</div>
+
+<main class="relative z-10">
 
 <!-- HERO -->
-<section id="home" class="relative min-h-screen flex items-center justify-center px-6 pt-24 pb-16" style="z-index:1;">
-  <div class="max-w-6xl mx-auto text-center">
-    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 text-sm font-mono">
-      <span class="dot"></span>
-      <span class="text-cyan-300">Available for opportunities</span>
+<section id="hero" class="min-h-screen flex flex-col justify-center px-6 md:px-10 pt-32 pb-16 relative">
+  <div class="max-w-7xl mx-auto w-full">
+    <div class="flex items-center gap-3 mb-8 reveal">
+      <span class="w-2 h-2 rounded-full bg-[var(--accent)]" style="animation:pulseDot 2s ease-in-out infinite"></span>
+      <span class="font-mono text-xs tracking-[0.25em] text-[var(--muted)] uppercase">AI / ML & DevOps Engineer · Dhaka, Bangladesh</span>
     </div>
 
-    <p class="font-mono text-sm tracking-[0.4em] text-pink-300 mb-6 uppercase">AI / ML · DevOps · Python</p>
-    
-    <h1 class="font-display font-black text-5xl sm:text-7xl lg:text-8xl leading-[0.95] mb-6">
-      <span class="block text-white/95">MD ARIFUR RAHMAN</span>
-      <span class="block grad-text">ANIK</span>
+    <h1 class="font-display font-extrabold leading-[0.85] tracking-tighter reveal">
+      <span class="block text-[18vw] md:text-[12vw] text-white">ARIFUR</span>
+      <span class="block text-[18vw] md:text-[12vw] name-outline">RAHMAN</span>
+      <span class="block text-[18vw] md:text-[12vw] text-grad">ANIK.</span>
     </h1>
-    
-    <p class="max-w-2xl mx-auto text-lg sm:text-xl text-white/70 mb-10 leading-relaxed">
-      Python Developer & ML–DevOps Engineer crafting <span class="text-cyan-300">scalable ML systems</span>, 
-      <span class="text-pink-300">intelligent APIs</span>, and <span class="text-amber-300">resilient cloud infrastructure</span>.
-    </p>
-    
-    <div class="flex flex-wrap items-center justify-center gap-4 mb-14">
-      <a href="#projects" class="btn-grad px-7 py-3.5 rounded-full font-semibold text-white flex items-center gap-2">
-        <i class="fa-solid fa-rocket"></i> View Projects
-      </a>
-      <a href="#contact" class="glass glass-hover px-7 py-3.5 rounded-full font-semibold flex items-center gap-2">
-        <i class="fa-solid fa-paper-plane text-pink-300"></i> Get in Touch
-      </a>
-    </div>
-    
-    <!-- socials -->
-    <div class="flex items-center justify-center gap-3 text-white/80">
-      <a href="mailto:aniklpu01@gmail.com" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="Email"><i class="fa-solid fa-envelope"></i></a>
-      <a href="https://github.com/anikpy" target="_blank" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="GitHub"><i class="fa-brands fa-github"></i></a>
-      <a href="https://www.linkedin.com/in/md-arifur-rahman-anik-a32232172/" target="_blank" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-      <a href="https://anikpy.github.io/MyPortfolio/" target="_blank" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="Portfolio"><i class="fa-solid fa-globe"></i></a>
-      <a href="tel:+8801627220072" class="w-12 h-12 rounded-full glass glass-hover flex items-center justify-center" title="Phone"><i class="fa-solid fa-phone"></i></a>
-    </div>
-    
-    <div class="mt-16 flex justify-center">
-      <div class="text-xs font-mono text-white/40 animate-bounce">
-        <i class="fa-solid fa-chevron-down"></i> SCROLL
+
+    <div class="grid md:grid-cols-12 gap-8 mt-12 reveal">
+      <div class="md:col-span-7">
+        <p class="text-lg md:text-xl text-[var(--fg)]/85 leading-relaxed max-w-2xl">
+          I build <span class="text-[var(--accent)]">scalable machine learning systems</span> and automate cloud-based deployments — combining LLMs, RAG pipelines, and robust DevOps infrastructure into production-grade AI products.
+        </p>
+      </div>
+      <div class="md:col-span-5 md:col-start-9 flex flex-col gap-4 justify-end">
+        <div class="flex flex-wrap gap-3">
+          <a href="#projects" class="btn accent magnetic">View Work <i class="fas fa-arrow-down text-[10px]"></i></a>
+          <a href="#contact" class="btn magnetic">Get in Touch</a>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Scroll hint -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 reveal" style="transition-delay:.6s">
+    <span class="font-mono text-[10px] tracking-[0.3em] text-[var(--muted)] uppercase">Scroll</span>
+    <div class="w-px h-12 bg-gradient-to-b from-[var(--accent)] to-transparent"></div>
+  </div>
 </section>
 
-<!-- MARQUEE -->
-<section class="relative py-6 border-y border-white/10 overflow-hidden" style="z-index:1; background:rgba(7,6,23,.6);">
-  <div class="marquee whitespace-nowrap font-display text-2xl font-bold">
-    <span class="text-white/30">Python</span><span class="text-pink-400">✦</span>
-    <span class="text-white/30">Django</span><span class="text-cyan-400">✦</span>
-    <span class="text-white/30">LangChain</span><span class="text-violet-400">✦</span>
-    <span class="text-white/30">RAG</span><span class="text-amber-400">✦</span>
-    <span class="text-white/30">Kubernetes</span><span class="text-lime-400">✦</span>
-    <span class="text-white/30">Docker</span><span class="text-pink-400">✦</span>
-    <span class="text-white/30">TensorFlow</span><span class="text-cyan-400">✦</span>
-    <span class="text-white/30">Elasticsearch</span><span class="text-violet-400">✦</span>
-    <span class="text-white/30">FastAPI</span><span class="text-amber-400">✦</span>
-    <span class="text-white/30">PyTorch</span><span class="text-lime-400">✦</span>
-    <span class="text-white/30">Python</span><span class="text-pink-400">✦</span>
-    <span class="text-white/30">Django</span><span class="text-cyan-400">✦</span>
-    <span class="text-white/30">LangChain</span><span class="text-violet-400">✦</span>
-    <span class="text-white/30">RAG</span><span class="text-amber-400">✦</span>
-    <span class="text-white/30">Kubernetes</span><span class="text-lime-400">✦</span>
-    <span class="text-white/30">Docker</span><span class="text-pink-400">✦</span>
-    <span class="text-white/30">TensorFlow</span><span class="text-cyan-400">✦</span>
-    <span class="text-white/30">Elasticsearch</span><span class="text-violet-400">✦</span>
-    <span class="text-white/30">FastAPI</span><span class="text-amber-400">✦</span>
-    <span class="text-white/30">PyTorch</span><span class="text-lime-400">✦</span>
+<!-- MARQUEE STRIP -->
+<section class="border-y border-[var(--border)] py-5 overflow-hidden bg-[var(--bg-2)]/40 backdrop-blur-sm relative z-10">
+  <div class="marquee gap-12 font-display text-2xl md:text-3xl font-semibold text-white/30 whitespace-nowrap">
+    <span>Python</span><span class="text-[var(--accent)]">✦</span>
+    <span>LangChain</span><span class="text-[var(--accent)]">✦</span>
+    <span>RAG Systems</span><span class="text-[var(--accent)]">✦</span>
+    <span>Kubernetes</span><span class="text-[var(--accent)]">✦</span>
+    <span>Docker</span><span class="text-[var(--accent)]">✦</span>
+    <span>TensorFlow</span><span class="text-[var(--accent)]">✦</span>
+    <span>ElasticSearch</span><span class="text-[var(--accent)]">✦</span>
+    <span>LLM Fine-Tuning</span><span class="text-[var(--accent)]">✦</span>
+    <span>FastAPI</span><span class="text-[var(--accent)]">✦</span>
+    <span>PyTorch</span><span class="text-[var(--accent)]">✦</span>
+    <!-- Duplicate for seamless loop -->
+    <span>Python</span><span class="text-[var(--accent)]">✦</span>
+    <span>LangChain</span><span class="text-[var(--accent)]">✦</span>
+    <span>RAG Systems</span><span class="text-[var(--accent)]">✦</span>
+    <span>Kubernetes</span><span class="text-[var(--accent)]">✦</span>
+    <span>Docker</span><span class="text-[var(--accent)]">✦</span>
+    <span>TensorFlow</span><span class="text-[var(--accent)]">✦</span>
+    <span>ElasticSearch</span><span class="text-[var(--accent)]">✦</span>
+    <span>LLM Fine-Tuning</span><span class="text-[var(--accent)]">✦</span>
+    <span>FastAPI</span><span class="text-[var(--accent)]">✦</span>
+    <span>PyTorch</span><span class="text-[var(--accent)]">✦</span>
   </div>
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="relative py-28 px-6" style="z-index:1;">
-  <div class="max-w-6xl mx-auto">
-    <div class="reveal flex items-center gap-4 mb-14">
-      <span class="font-mono text-sm text-pink-300">01 //</span>
-      <h2 class="font-display text-4xl sm:text-5xl font-bold">About <span class="grad-text">Me</span></h2>
-      <div class="flex-1 h-px bg-gradient-to-r from-pink-500/50 to-transparent"></div>
-    </div>
-    
-    <div class="grid lg:grid-cols-5 gap-8 items-start">
-      <!-- profile card -->
-      <div class="lg:col-span-2 reveal">
-        <div class="glass rounded-3xl p-8 relative overflow-hidden">
-          <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-br from-pink-500/30 to-violet-500/30 blur-2xl"></div>
-          <div class="relative">
-            <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-pink-500 via-violet-500 to-cyan-400 p-[2px] mb-6 spin-slow">
-              <div class="w-full h-full rounded-2xl bg-[#0d0a2c] flex items-center justify-center font-display text-3xl font-black">A</div>
-            </div>
-            <h3 class="font-display text-2xl font-bold">Md Arifur Rahman Anik</h3>
-            <p class="text-cyan-300 font-mono text-sm mb-6">Python Developer · ML-DevOps</p>
-            
-            <div class="space-y-3 text-sm">
-              <div class="flex items-start gap-3"><i class="fa-solid fa-location-dot text-pink-400 mt-1"></i><span class="text-white/75">Nikunja 2, Dhaka, Bangladesh</span></div>
-              <div class="flex items-start gap-3"><i class="fa-solid fa-envelope text-pink-400 mt-1"></i><span class="text-white/75">aniklpu01@gmail.com</span></div>
-              <div class="flex items-start gap-3"><i class="fa-solid fa-phone text-pink-400 mt-1"></i><span class="text-white/75">+880 1627 220072</span></div>
-              <div class="flex items-start gap-3"><i class="fa-solid fa-briefcase text-pink-400 mt-1"></i><span class="text-white/75">3+ Years Experience</span></div>
-            </div>
-            
-            <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-3 gap-3 text-center">
-              <div>
-                <div class="font-display text-2xl font-bold grad-text">3+</div>
-                <div class="text-xs text-white/50">Years</div>
-              </div>
-              <div>
-                <div class="font-display text-2xl font-bold grad-text">14+</div>
-                <div class="text-xs text-white/50">Projects</div>
-              </div>
-              <div>
-                <div class="font-display text-2xl font-bold grad-text">50+</div>
-                <div class="text-xs text-white/50">Apps Deployed</div>
-              </div>
-            </div>
-          </div>
-        </div>
+<section id="about" class="py-24 md:py-36 px-6 md:px-10 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-12 gap-12">
+      <div class="md:col-span-4 reveal-l">
+        <span class="section-num">01 / ABOUT</span>
+        <h2 class="font-display font-extrabold text-4xl md:text-5xl mt-6 leading-[0.95]">
+          Engineering<br/>
+          <span class="text-grad">intelligent</span><br/>
+          infrastructure.
+        </h2>
       </div>
-      
-      <!-- bio -->
-      <div class="lg:col-span-3 reveal space-y-6">
-        <p class="text-lg sm:text-xl text-white/80 leading-relaxed">
-          I'm a <span class="text-pink-300 font-semibold">Python Developer and ML–DevOps Engineer</span> with experience 
-          building <span class="text-cyan-300 font-semibold">scalable machine learning systems</span> and automating 
-          cloud-based deployments. I specialize in developing intelligent APIs, managing CI/CD pipelines, 
-          and deploying AI models into production environments.
+      <div class="md:col-span-7 md:col-start-6 reveal-r">
+        <p class="text-lg md:text-xl leading-relaxed text-[var(--fg)]/80 mb-6">
+          I'm an <span class="text-white font-semibold">AI Fullstack Developer</span> with 3+ years of experience building scalable ML systems and automating cloud-based deployments. My work spans LLM fine-tuning, vector search, agentic AI, and the DevOps backbone that keeps models running in production.
         </p>
-        <p class="text-base text-white/60 leading-relaxed">
-          Passionate about delivering solutions that combine data-driven insights with reliable, maintainable 
-          infrastructure. From fine-tuning LLMs to orchestrating Kubernetes clusters — I bridge the gap between 
-          research and production.
+        <p class="text-base text-[var(--muted)] leading-relaxed mb-10">
+          From deploying Ollama models behind Nginx to orchestrating Kubernetes clusters and crafting Redis-cached high-traffic APIs, I bridge the gap between research-grade ML and reliable, maintainable infrastructure. I'm passionate about delivering solutions that combine data-driven insights with operational excellence.
         </p>
-        
-        <div class="grid sm:grid-cols-2 gap-4 pt-4">
-          <div class="glass glass-hover rounded-2xl p-5">
-            <i class="fa-solid fa-brain text-2xl text-pink-400 mb-3"></i>
-            <h4 class="font-semibold mb-1">AI / ML Engineering</h4>
-            <p class="text-sm text-white/60">LLMs, RAG, BERT, fine-tuning, vector search & NLP pipelines.</p>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+          <div class="reveal" style="transition-delay:.1s">
+            <div class="counter-line"></div>
+            <div class="font-display text-4xl md:text-5xl font-bold text-white counter" data-target="3">0</div>
+            <div class="font-mono text-[10px] tracking-[0.2em] text-[var(--muted)] uppercase mt-1">Years Exp.</div>
           </div>
-          <div class="glass glass-hover rounded-2xl p-5">
-            <i class="fa-solid fa-server text-2xl text-cyan-400 mb-3"></i>
-            <h4 class="font-semibold mb-1">DevOps & Infra</h4>
-            <p class="text-sm text-white/60">Docker, K8s, Jenkins, ArgoCD, Nginx, CI/CD automation.</p>
+          <div class="reveal" style="transition-delay:.2s">
+            <div class="counter-line"></div>
+            <div class="font-display text-4xl md:text-5xl font-bold text-white counter" data-target="50">0</div>
+            <div class="font-mono text-[10px] tracking-[0.2em] text-[var(--muted)] uppercase mt-1">Apps Deployed</div>
           </div>
-          <div class="glass glass-hover rounded-2xl p-5">
-            <i class="fa-solid fa-code text-2xl text-violet-400 mb-3"></i>
-            <h4 class="font-semibold mb-1">Backend & APIs</h4>
-            <p class="text-sm text-white/60">Django REST, FastAPI, Flask, Streamlit, microservices.</p>
+          <div class="reveal" style="transition-delay:.3s">
+            <div class="counter-line"></div>
+            <div class="font-display text-4xl md:text-5xl font-bold text-white counter" data-target="14">0</div>
+            <div class="font-mono text-[10px] tracking-[0.2em] text-[var(--muted)] uppercase mt-1">Key Projects</div>
           </div>
-          <div class="glass glass-hover rounded-2xl p-5">
-            <i class="fa-solid fa-database text-2xl text-amber-400 mb-3"></i>
-            <h4 class="font-semibold mb-1">Data & Search</h4>
-            <p class="text-sm text-white/60">Elasticsearch, FAISS, Pinecone, PostgreSQL, ETL/ELT.</p>
+          <div class="reveal" style="transition-delay:.4s">
+            <div class="counter-line"></div>
+            <div class="font-display text-4xl md:text-5xl font-bold text-white counter" data-target="500">0</div>
+            <div class="font-mono text-[10px] tracking-[0.2em] text-[var(--muted)] uppercase mt-1">Sites Scraped</div>
           </div>
         </div>
       </div>
@@ -353,124 +409,143 @@
 </section>
 
 <!-- SKILLS -->
-<section id="skills" class="relative py-28 px-6" style="z-index:1;">
-  <div class="max-w-6xl mx-auto">
-    <div class="reveal flex items-center gap-4 mb-14">
-      <span class="font-mono text-sm text-cyan-300">02 //</span>
-      <h2 class="font-display text-4xl sm:text-5xl font-bold">Tech <span class="grad-text">Arsenal</span></h2>
-      <div class="flex-1 h-px bg-gradient-to-r from-cyan-500/50 to-transparent"></div>
+<section id="skills" class="py-24 md:py-36 px-6 md:px-10 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6 reveal">
+      <div>
+        <span class="section-num">02 / CAPABILITIES</span>
+        <h2 class="font-display font-extrabold text-4xl md:text-6xl mt-6 leading-[0.95]">
+          The full <span class="text-grad">stack</span><br/>of intelligence.
+        </h2>
+      </div>
+      <p class="max-w-md text-[var(--muted)]">A curated toolkit spanning machine learning, agentic AI, backend engineering, and the DevOps pipelines that ship them.</p>
     </div>
-    
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Programming -->
-      <div class="reveal glass glass-hover rounded-3xl p-7">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center"><i class="fa-solid fa-code text-white"></i></div>
-          <h3 class="font-display text-xl font-bold">Programming & AI</h3>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- AI/ML -->
+      <div class="glass card-hover p-7 reveal">
+        <div class="flex items-center justify-between mb-5">
+          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent)]/10 border border-[var(--accent)]/30">
+            <i class="fas fa-brain text-[var(--accent)]"></i>
+          </div>
+          <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">01</span>
         </div>
+        <h3 class="font-display font-bold text-xl mb-1">AI & Machine Learning</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Model training, fine-tuning, and inference systems.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Python</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Django</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">LangChain</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">LangGraph</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">RAG</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">LLM Fine-Tuning</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Vector Embedding</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">FAISS</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Pinecone</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">ELK</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Agentic AI</span>
+          <span class="tag solid">TensorFlow</span>
+          <span class="tag solid">PyTorch</span>
+          <span class="tag solid">Keras</span>
+          <span class="tag">Scikit-Learn</span>
+          <span class="tag">BERT</span>
+          <span class="tag">OpenCV</span>
+          <span class="tag">Predictive Analytics</span>
         </div>
       </div>
-      
-      <!-- Frameworks -->
-      <div class="reveal glass glass-hover rounded-3xl p-7">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center"><i class="fa-solid fa-layer-group text-white"></i></div>
-          <h3 class="font-display text-xl font-bold">Frameworks & ML</h3>
+
+      <!-- LLM & RAG -->
+      <div class="glass card-hover p-7 reveal" style="transition-delay:.1s">
+        <div class="flex items-center justify-between mb-5">
+          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent-2)]/10 border border-[var(--accent-2)]/30">
+            <i class="fas fa-robot text-[var(--accent-2)]"></i>
+          </div>
+          <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">02</span>
         </div>
+        <h3 class="font-display font-bold text-xl mb-1">LLMs & Agentic AI</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">RAG pipelines, embeddings, and autonomous agents.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="chip px-3 py-1.5 rounded-full text-sm">TensorFlow</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Keras</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">PyTorch</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Scikit-Learn</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">BERT</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">LLM</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">NLP</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Predictive Analytics</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">OpenCV</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Selenium</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Scrapy</span>
+          <span class="tag solid">LangChain</span>
+          <span class="tag solid">LangGraph</span>
+          <span class="tag solid">RAG</span>
+          <span class="tag">LLM Fine-Tuning</span>
+          <span class="tag">Vector Embedding</span>
+          <span class="tag">FAISS</span>
+          <span class="tag">Pinecone</span>
+          <span class="tag">Agentic AI</span>
         </div>
       </div>
-      
-      <!-- ML Models -->
-      <div class="reveal glass glass-hover rounded-3xl p-7">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i class="fa-solid fa-chart-line text-white"></i></div>
-          <h3 class="font-display text-xl font-bold">ML Models</h3>
+
+      <!-- Backend -->
+      <div class="glass card-hover p-7 reveal" style="transition-delay:.2s">
+        <div class="flex items-center justify-between mb-5">
+          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent-3)]/10 border border-[var(--accent-3)]/30">
+            <i class="fas fa-server text-[var(--accent-3)]"></i>
+          </div>
+          <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">03</span>
         </div>
+        <h3 class="font-display font-bold text-xl mb-1">Backend & APIs</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">High-performance API services and frameworks.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Text Classification</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Data Preprocessing</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Feature Engineering</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Model Evaluation</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Image Detection</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Fine-tuning</span>
+          <span class="tag solid">Python</span>
+          <span class="tag solid">Django</span>
+          <span class="tag solid">FastAPI</span>
+          <span class="tag">Flask</span>
+          <span class="tag">Django REST</span>
+          <span class="tag">Streamlit</span>
+          <span class="tag">React</span>
+          <span class="tag">Next.js</span>
         </div>
       </div>
-      
-      <!-- API & DB -->
-      <div class="reveal glass glass-hover rounded-3xl p-7">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"><i class="fa-solid fa-plug text-white"></i></div>
-          <h3 class="font-display text-xl font-bold">APIs & Databases</h3>
+
+      <!-- Data & Search -->
+      <div class="glass card-hover p-7 reveal" style="transition-delay:.3s">
+        <div class="flex items-center justify-between mb-5">
+          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent)]/10 border border-[var(--accent)]/30">
+            <i class="fas fa-database text-[var(--accent)]"></i>
+          </div>
+          <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">04</span>
         </div>
+        <h3 class="font-display font-bold text-xl mb-1">Data & Search</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Databases, search engines, and ETL pipelines.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Django REST</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">FastAPI</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Flask</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Streamlit</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Elasticsearch</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">PostgreSQL</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Redis</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">ETL / ELT</span>
+          <span class="tag solid">ElasticSearch</span>
+          <span class="tag solid">PostgreSQL</span>
+          <span class="tag">MSSQL</span>
+          <span class="tag">ELK Stack</span>
+          <span class="tag">Kibana</span>
+          <span class="tag">ETL & ELT</span>
         </div>
       </div>
-      
+
       <!-- DevOps -->
-      <div class="reveal glass glass-hover rounded-3xl p-7">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center"><i class="fa-solid fa-gears text-white"></i></div>
-          <h3 class="font-display text-xl font-bold">DevOps & Infra</h3>
+      <div class="glass card-hover p-7 reveal" style="transition-delay:.4s">
+        <div class="flex items-center justify-between mb-5">
+          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent-2)]/10 border border-[var(--accent-2)]/30">
+            <i class="fas fa-cubes text-[var(--accent-2)]"></i>
+          </div>
+          <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">05</span>
         </div>
+        <h3 class="font-display font-bold text-xl mb-1">DevOps & Infra</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Containerization, CI/CD, and orchestration.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Docker</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Kubernetes</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Nginx</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">CI/CD</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Jenkins</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">ArgoCD</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Terraform</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Git</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Load Balancing</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Monitoring</span>
+          <span class="tag solid">Docker</span>
+          <span class="tag solid">Kubernetes</span>
+          <span class="tag solid">Jenkins</span>
+          <span class="tag">Nginx</span>
+          <span class="tag">ArgoCD</span>
+          <span class="tag">Terraform</span>
+          <span class="tag">CI/CD</span>
+          <span class="tag">Git</span>
         </div>
       </div>
-      
+
       <!-- Automation -->
-      <div class="reveal glass glass-hover rounded-3xl p-7">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-lime-500 to-green-600 flex items-center justify-center"><i class="fa-solid fa-robot text-white"></i></div>
-          <h3 class="font-display text-xl font-bold">Automation</h3>
+      <div class="glass card-hover p-7 reveal" style="transition-delay:.5s">
+        <div class="flex items-center justify-between mb-5">
+          <div class="w-11 h-11 flex items-center justify-center rounded bg-[var(--accent-3)]/10 border border-[var(--accent-3)]/30">
+            <i class="fas fa-gear text-[var(--accent-3)]"></i>
+          </div>
+          <span class="font-mono text-[10px] text-[var(--muted)] tracking-widest">06</span>
         </div>
+        <h3 class="font-display font-bold text-xl mb-1">Automation & Scraping</h3>
+        <p class="text-sm text-[var(--muted)] mb-5">Workflow automation and large-scale data extraction.</p>
         <div class="flex flex-wrap gap-2">
-          <span class="chip px-3 py-1.5 rounded-full text-sm">n8n</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Selenium</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Scrapy</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Gmail Automation</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Web Scraping</span>
-          <span class="chip px-3 py-1.5 rounded-full text-sm">Workflow Engine</span>
+          <span class="tag solid">n8n</span>
+          <span class="tag solid">Selenium</span>
+          <span class="tag solid">Scrapy</span>
+          <span class="tag">Load Balancing</span>
+          <span class="tag">Monitoring</span>
+          <span class="tag">Redis</span>
         </div>
       </div>
     </div>
@@ -478,79 +553,77 @@
 </section>
 
 <!-- EXPERIENCE -->
-<section id="experience" class="relative py-28 px-6" style="z-index:1;">
-  <div class="max-w-5xl mx-auto">
-    <div class="reveal flex items-center gap-4 mb-14">
-      <span class="font-mono text-sm text-violet-300">03 //</span>
-      <h2 class="font-display text-4xl sm:text-5xl font-bold">Professional <span class="grad-text">Journey</span></h2>
-      <div class="flex-1 h-px bg-gradient-to-r from-violet-500/50 to-transparent"></div>
+<section id="experience" class="py-24 md:py-36 px-6 md:px-10 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-16 reveal">
+      <span class="section-num">03 / EXPERIENCE</span>
+      <h2 class="font-display font-extrabold text-4xl md:text-6xl mt-6 leading-[0.95]">
+        Three years of<br/><span class="text-grad">shipping AI.</span>
+      </h2>
     </div>
-    
-    <div class="relative pl-8 sm:pl-12">
-      <!-- vertical line -->
-      <div class="absolute left-2 sm:left-4 top-2 bottom-2 w-[2px] tl-line"></div>
-      
-      <!-- Jobdesk -->
-      <div class="reveal relative mb-14">
-        <div class="absolute -left-[26px] sm:-left-[34px] top-2 w-4 h-4 rounded-full bg-pink-500 ring-4 ring-pink-500/30"></div>
-        <div class="glass glass-hover rounded-3xl p-7">
-          <div class="flex flex-wrap justify-between items-start gap-3 mb-4">
-            <div>
-              <span class="inline-block text-xs font-mono px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 mb-2">CURRENT</span>
-              <h3 class="font-display text-2xl font-bold">Python Developer</h3>
-              <p class="text-cyan-300">Jobdesk Ltd, Uttara — Dhaka</p>
-            </div>
-            <div class="text-right">
-              <p class="font-mono text-sm text-amber-300">Oct 2023 — Present</p>
-              <p class="text-xs text-white/50">1.5+ years</p>
-            </div>
-          </div>
-          <ul class="space-y-2 text-sm text-white/70 list-none">
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Deployed Ollama-based ML models (gpt-oss:20b, LLAMA2, Gemma 4B) in production via Nginx with DevOps pipelines.</li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Built RAG-based candidate search using gpt-oss + Elasticsearch for CV-to-job matching.</li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Established CI/CD with Jenkins + Docker; managed Kubernetes clusters for scalable deployments.</li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Deployed 50+ applications across Nginx, Apache, K8s and Ingress with optimized load balancing.</li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-pink-400 mt-1 text-xs"></i>Integrated Redis caching, Elasticsearch clusters, and automated workflows with n8n.</li>
+
+    <div class="relative">
+      <div class="timeline-line hidden md:block"></div>
+
+      <!-- Job 1: Nitol Motors -->
+      <div class="grid md:grid-cols-2 gap-8 md:gap-16 mb-16 reveal">
+        <div class="md:text-right md:pr-12 relative">
+          <div class="tl-dot hidden md:block" style="left:auto;right:-7px;"></div>
+          <span class="font-mono text-xs text-[var(--accent)] tracking-widest">JULY 2026 — PRESENT</span>
+          <h3 class="font-display font-bold text-2xl md:text-3xl mt-2">AI Fullstack Developer</h3>
+          <p class="text-[var(--muted)] mt-1">Nitol Motors Ltd</p>
+        </div>
+        <div class="md:pl-12">
+          <p class="text-[var(--fg)]/80 leading-relaxed mb-4">
+            Leading end-to-end AI product development — from model design to production deployment. Architecting scalable ML infrastructure and intelligent APIs.
+          </p>
+          <ul class="space-y-2 text-sm text-[var(--muted)]">
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Containerized deployments with full CI/CD integration</li>
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Redis caching for high-traffic applications</li>
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Advanced NLP solutions with BERT embeddings</li>
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Production-grade image detection APIs</li>
           </ul>
-          <div class="mt-5 flex flex-wrap gap-2">
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Python</span>
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">RAG</span>
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Kubernetes</span>
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Elasticsearch</span>
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Nginx</span>
-          </div>
         </div>
       </div>
-      
-      <!-- Ishraak -->
-      <div class="reveal relative">
-        <div class="absolute -left-[26px] sm:-left-[34px] top-2 w-4 h-4 rounded-full bg-cyan-400 ring-4 ring-cyan-400/30"></div>
-        <div class="glass glass-hover rounded-3xl p-7">
-          <div class="flex flex-wrap justify-between items-start gap-3 mb-4">
-            <div>
-              <span class="inline-block text-xs font-mono px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 mb-2">INTERNSHIP</span>
-              <h3 class="font-display text-2xl font-bold">Junior Machine Learning Engineer</h3>
-              <p class="text-cyan-300">Ishraak Solutions Limited — Gulshan-1, Dhaka</p>
-            </div>
-            <div class="text-right">
-              <p class="font-mono text-sm text-amber-300">Nov 2021 — May 2023</p>
-              <p class="text-xs text-white/50">1.5 years</p>
-            </div>
-          </div>
-          <ul class="space-y-2 text-sm text-white/70 list-none">
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Gained hands-on experience in computer vision — training and fine-tuning ML models for image detection & processing.</li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Developed image detection models that enhanced object recognition accuracy for automated visual inspection.</li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Automated e-commerce scraping of 15,000 product listings from Startech to WordPress.</li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Managed end-to-end data scraping projects with Selenium, Scrapy & API integrations.</li>
-            <li class="flex gap-3"><i class="fa-solid fa-circle-check text-cyan-400 mt-1 text-xs"></i>Collaborated with senior engineers on model optimization and scalable deployments.</li>
+
+      <!-- Job 2: Jobdesk Ltd -->
+      <div class="grid md:grid-cols-2 gap-8 md:gap-16 mb-16 reveal">
+        <div class="md:text-right md:pr-12 md:order-1 order-2 relative">
+          <div class="tl-dot hidden md:block" style="left:auto;right:-7px;"></div>
+          <span class="font-mono text-xs text-[var(--accent)] tracking-widest">OCT 2023 — JUNE 2026</span>
+          <h3 class="font-display font-bold text-2xl md:text-3xl mt-2">Python Developer</h3>
+          <p class="text-[var(--muted)] mt-1">Jobdesk Ltd, Uttara</p>
+        </div>
+        <div class="md:pl-12 md:order-2 order-1">
+          <p class="text-[var(--fg)]/80 leading-relaxed mb-4">
+            Built and deployed 50+ applications across Nginx, Apache, Kubernetes, and Ingress. Engineered data scraping workflows and document processing APIs at scale.
+          </p>
+          <ul class="space-y-2 text-sm text-[var(--muted)]">
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Scraped 15,000+ product listings for e-commerce automation</li>
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> ElasticSearch cluster with 3 nodes & semantic search</li>
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Document processing API suite (PDF merge/extract)</li>
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Geolocation services with Nominatim + PostgreSQL</li>
           </ul>
-          <div class="mt-5 flex flex-wrap gap-2">
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Computer Vision</span>
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">TensorFlow</span>
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">OpenCV</span>
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Scrapy</span>
-            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-white/5 text-white/70">Selenium</span>
-          </div>
+        </div>
+      </div>
+
+      <!-- Job 3: Ishraak -->
+      <div class="grid md:grid-cols-2 gap-8 md:gap-16 reveal">
+        <div class="md:text-right md:pr-12 relative">
+          <div class="tl-dot hidden md:block" style="left:auto;right:-7px;"></div>
+          <span class="font-mono text-xs text-[var(--accent)] tracking-widest">NOV 2021 — MAY 2023 · 1.5 YRS</span>
+          <h3 class="font-display font-bold text-2xl md:text-3xl mt-2">Junior ML Engineer <span class="text-[var(--muted)] text-base">(Intern)</span></h3>
+          <p class="text-[var(--muted)] mt-1">Ishraak Solutions Limited</p>
+        </div>
+        <div class="md:pl-12">
+          <p class="text-[var(--fg)]/80 leading-relaxed mb-4">
+            Hands-on computer vision work — training and fine-tuning models for image detection. Built foundations for scalable, production-grade ML applications.
+          </p>
+          <ul class="space-y-2 text-sm text-[var(--muted)]">
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Image detection models for automated visual inspection</li>
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Object recognition accuracy enhancements</li>
+            <li class="flex gap-3"><span class="text-[var(--accent)] mt-1">▸</span> Collaborated with senior engineers on deployment</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -558,90 +631,300 @@
 </section>
 
 <!-- PROJECTS -->
-<section id="projects" class="relative py-28 px-6" style="z-index:1;">
+<section id="projects" class="py-24 md:py-36 px-6 md:px-10 relative">
   <div class="max-w-7xl mx-auto">
-    <div class="reveal flex items-center gap-4 mb-14">
-      <span class="font-mono text-sm text-amber-300">04 //</span>
-      <h2 class="font-display text-4xl sm:text-5xl font-bold">Featured <span class="grad-text">Projects</span></h2>
-      <div class="flex-1 h-px bg-gradient-to-r from-amber-500/50 to-transparent"></div>
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6 reveal">
+      <div>
+        <span class="section-num">04 / SELECTED WORK</span>
+        <h2 class="font-display font-extrabold text-4xl md:text-6xl mt-6 leading-[0.95]">
+          Things I've<br/><span class="text-grad">built & shipped.</span>
+        </h2>
+      </div>
+      <p class="max-w-md text-[var(--muted)]">A selection of projects spanning LLM deployment, RAG systems, MLOps infrastructure, and large-scale data engineering.</p>
     </div>
-    
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsGrid"></div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Featured Project -->
+      <article class="glass card-hover p-7 md:col-span-2 lg:row-span-2 tilt reveal" style="min-height:340px">
+        <div class="tilt-inner h-full flex flex-col">
+          <div class="flex items-start justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <span class="font-mono text-xs text-[var(--accent)] tracking-widest">FEATURED</span>
+              <span class="w-1 h-1 rounded-full bg-[var(--muted)]"></span>
+              <span class="font-mono text-xs text-[var(--muted)]">RAG · LLM</span>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square text-[var(--muted)] text-sm"></i>
+          </div>
+          <h3 class="font-display font-bold text-3xl md:text-4xl mb-4 leading-tight">Candidate Search with gpt-oss RAG</h3>
+          <p class="text-[var(--fg)]/75 leading-relaxed mb-6 flex-grow">
+            Built and deployed a RAG-based system using gpt-oss to match CVs with job descriptions and retrieve the best candidates efficiently. Integrated with ElasticSearch for semantic vector search across large resume datasets.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag solid">Python</span>
+            <span class="tag solid">gpt-oss</span>
+            <span class="tag solid">RAG</span>
+            <span class="tag">ElasticSearch</span>
+            <span class="tag">Nginx</span>
+            <span class="tag">DevOps</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 2 -->
+      <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.1s">
+        <div class="tilt-inner h-full flex flex-col">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-xs text-[var(--accent-2)] tracking-widest">DEPLOYMENT</span>
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3 leading-tight">Ollama (gpt-oss:20b) on vast.ai</h3>
+          <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
+            Deployed an Ollama-based 20B parameter model in production, responsible for extracting skills and structured data from CVs at scale.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag">ML</span>
+            <span class="tag">Python</span>
+            <span class="tag">Nginx</span>
+            <span class="tag">DevOps</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 3 -->
+      <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.2s">
+        <div class="tilt-inner h-full flex flex-col">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-xs text-[var(--accent-3)] tracking-widest">VISION · LLM</span>
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3 leading-tight">Gemma 4B Image Explanation</h3>
+          <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
+            Deployed a Gemma 4B model in production to read images and generate natural-language explanations — powering accessibility and content analysis.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag">Gemma</span>
+            <span class="tag">Ollama</span>
+            <span class="tag">Nginx</span>
+            <span class="tag">DevOps</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 4 -->
+      <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.3s">
+        <div class="tilt-inner h-full flex flex-col">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-xs text-[var(--accent)] tracking-widest">SEARCH INFRA</span>
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3 leading-tight">ElasticSearch Cluster · 3 Nodes</h3>
+          <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
+            Deployed a 3-node ElasticSearch cluster behind NGINX with vector embedding storage and advanced semantic search using custom keywords. Built a Python data ingestion API with Gunicorn.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag">ElasticSearch</span>
+            <span class="tag">Kibana</span>
+            <span class="tag">Gunicorn</span>
+            <span class="tag">Python</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 5 -->
+      <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.4s">
+        <div class="tilt-inner h-full flex flex-col">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-xs text-[var(--accent-2)] tracking-widest">DEVOPS</span>
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3 leading-tight">CI/CD + Kubernetes Orchestration</h3>
+          <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
+            Established CI/CD pipelines with Jenkins and Docker, automating build and deployment. Managed Kubernetes clusters for scalable, resilient application updates.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag">Docker</span>
+            <span class="tag">Jenkins</span>
+            <span class="tag">Kubernetes</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 6 -->
+      <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.5s">
+        <div class="tilt-inner h-full flex flex-col">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-xs text-[var(--accent-3)] tracking-widest">AUTOMATION</span>
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3 leading-tight">Automated Gmail with n8n</h3>
+          <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
+            Deployed an n8n instance to automate Gmail functionalities for candidates — streamlining communication workflows and reducing manual overhead.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag">n8n</span>
+            <span class="tag">Gmail API</span>
+            <span class="tag">Automation</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 7 -->
+      <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.6s">
+        <div class="tilt-inner h-full flex flex-col">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-xs text-[var(--accent)] tracking-widest">DATA ENGINEERING</span>
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3 leading-tight">Scalable Web Scraping Engine</h3>
+          <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
+            Built a scalable scraping engine using Scrapy on Nginx, processing structured and unstructured data from 500+ websites. Integrated Selenium for dynamic extraction.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag">Python</span>
+            <span class="tag">Scrapy</span>
+            <span class="tag">Selenium</span>
+            <span class="tag">Nginx</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 8 -->
+      <article class="glass card-hover p-7 tilt reveal" style="transition-delay:.7s">
+        <div class="tilt-inner h-full flex flex-col">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-xs text-[var(--accent-2)] tracking-widest">LLM DEPLOYMENT</span>
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3 leading-tight">Ollama (LLAMA2) on Nginx</h3>
+          <p class="text-sm text-[var(--fg)]/70 leading-relaxed mb-5 flex-grow">
+            Deployed an Ollama-based LLAMA2 model in production behind Nginx, responsible for regenerating and refining job descriptions automatically.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag">ML</span>
+            <span class="tag">Python</span>
+            <span class="tag">llama2</span>
+            <span class="tag">Nginx</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- More projects note -->
+    <div class="mt-10 text-center reveal">
+      <p class="font-mono text-xs text-[var(--muted)] tracking-widest">+ 6 MORE PROJECTS INCLUDING REDIS CACHING · DOCUMENT PROCESSING SUITE · GEOLOCATION SERVICES</p>
+    </div>
   </div>
 </section>
 
-<!-- EDUCATION -->
-<section id="education" class="relative py-28 px-6" style="z-index:1;">
-  <div class="max-w-6xl mx-auto">
-    <div class="reveal flex items-center gap-4 mb-14">
-      <span class="font-mono text-sm text-lime-300">05 //</span>
-      <h2 class="font-display text-4xl sm:text-5xl font-bold">Education & <span class="grad-text">Achievements</span></h2>
-      <div class="flex-1 h-px bg-gradient-to-r from-lime-500/50 to-transparent"></div>
+<!-- EDUCATION & ACHIEVEMENTS -->
+<section class="py-24 md:py-36 px-6 md:px-10 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-16 reveal">
+      <span class="section-num">05 / BACKGROUND</span>
+      <h2 class="font-display font-extrabold text-4xl md:text-6xl mt-6 leading-[0.95]">
+        Education &<br/><span class="text-grad">achievements.</span>
+      </h2>
     </div>
-    
-    <div class="grid lg:grid-cols-3 gap-6 mb-10">
-      <div class="reveal glass glass-hover rounded-3xl p-7">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-white text-xl"></i></div>
-          <span class="text-xs font-mono text-white/50">2022</span>
+
+    <div class="grid md:grid-cols-12 gap-8">
+      <!-- Education -->
+      <div class="md:col-span-7 space-y-5">
+        <div class="glass card-hover p-7 reveal-l">
+          <div class="flex items-start gap-5">
+            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[var(--accent)]/10 border border-[var(--accent)]/30">
+              <i class="fas fa-graduation-cap text-[var(--accent)]"></i>
+            </div>
+            <div class="flex-grow">
+              <div class="flex flex-wrap items-baseline justify-between gap-2 mb-2">
+                <h3 class="font-display font-bold text-xl">B.Tech, Computer Science & Engineering</h3>
+                <span class="font-mono text-xs text-[var(--accent)]">2022</span>
+              </div>
+              <p class="text-[var(--muted)] mb-3">Lovely Professional University · Punjab, India</p>
+              <div class="flex flex-wrap gap-4 text-sm">
+                <span class="text-[var(--fg)]/70"><span class="text-[var(--muted)]">Major:</span> Machine Learning</span>
+                <span class="text-[var(--fg)]/70"><span class="text-[var(--muted)]">CGPA:</span> 7.15</span>
+                <span class="text-[var(--fg)]/70"><span class="text-[var(--muted)]">Credits:</span> 160</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <h3 class="font-display text-lg font-bold mb-1">Lovely Professional University</h3>
-        <p class="text-cyan-300 text-sm mb-3">Punjab, India</p>
-        <p class="text-sm text-white/70">B.Tech · Computer Science & Engineering</p>
-        <p class="text-sm text-white/70">Major: Machine Learning</p>
-        <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-sm">
-          <span class="text-white/50">CGPA</span><span class="font-mono text-pink-300 font-bold">7.15 / 10</span>
+
+        <div class="glass card-hover p-7 reveal-l" style="transition-delay:.1s">
+          <div class="flex items-start gap-5">
+            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[var(--accent-3)]/10 border border-[var(--accent-3)]/30">
+              <i class="fas fa-school text-[var(--accent-3)]"></i>
+            </div>
+            <div class="flex-grow">
+              <div class="flex flex-wrap items-baseline justify-between gap-2 mb-2">
+                <h3 class="font-display font-bold text-xl">Higher Secondary · Science</h3>
+                <span class="font-mono text-xs text-[var(--accent)]">2017</span>
+              </div>
+              <p class="text-[var(--muted)] mb-3">Cantonment Public School & College · Mymensingh</p>
+              <span class="text-sm text-[var(--fg)]/70"><span class="text-[var(--muted)]">GPA:</span> 4.67</span>
+            </div>
+          </div>
         </div>
-        <div class="flex justify-between text-sm mt-2">
-          <span class="text-white/50">Credits</span><span class="font-mono text-white/80">160</span>
+
+        <div class="glass card-hover p-7 reveal-l" style="transition-delay:.2s">
+          <div class="flex items-start gap-5">
+            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[var(--accent-2)]/10 border border-[var(--accent-2)]/30">
+              <i class="fas fa-book text-[var(--accent-2)]"></i>
+            </div>
+            <div class="flex-grow">
+              <div class="flex flex-wrap items-baseline justify-between gap-2 mb-2">
+                <h3 class="font-display font-bold text-xl">Secondary School · Science</h3>
+                <span class="font-mono text-xs text-[var(--accent)]">2015</span>
+              </div>
+              <p class="text-[var(--muted)] mb-3">Kendua Joy Hari Spry Govt. High School</p>
+              <span class="text-sm text-[var(--fg)]/70"><span class="text-[var(--muted)]">GPA:</span> 4.72</span>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div class="reveal glass glass-hover rounded-3xl p-7">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i class="fa-solid fa-school text-white text-xl"></i></div>
-          <span class="text-xs font-mono text-white/50">2017</span>
+
+      <!-- Certifications -->
+      <div class="md:col-span-5 space-y-5">
+        <div class="glass p-7 reveal-r" style="background:linear-gradient(135deg,rgba(197,255,61,0.06) 0%,rgba(255,107,61,0.03) 100%);border-color:rgba(197,255,61,0.2)">
+          <div class="flex items-center gap-3 mb-5">
+            <i class="fas fa-award text-[var(--accent)] text-xl"></i>
+            <h3 class="font-display font-bold text-xl">Certifications</h3>
+          </div>
+          <div class="space-y-4">
+            <div class="flex items-start gap-3 pb-4 border-b border-[var(--border)]">
+              <i class="fas fa-circle-check text-[var(--accent)] mt-1 text-sm"></i>
+              <div>
+                <p class="font-semibold">Elasticsearch 8 Certification</p>
+                <p class="text-xs text-[var(--muted)] mt-1">Udemy · Professional</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <i class="fas fa-circle-check text-[var(--accent)] mt-1 text-sm"></i>
+              <div>
+                <p class="font-semibold">IELTS · Score 6.0</p>
+                <p class="text-xs text-[var(--muted)] mt-1">British Council</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <h3 class="font-display text-lg font-bold mb-1">Cantonment Public School & College</h3>
-        <p class="text-cyan-300 text-sm mb-3">Mymensingh</p>
-        <p class="text-sm text-white/70">Higher Secondary · Science</p>
-        <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-sm">
-          <span class="text-white/50">GPA</span><span class="font-mono text-pink-300 font-bold">4.67 / 5</span>
-        </div>
-      </div>
-      
-      <div class="reveal glass glass-hover rounded-3xl p-7">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"><i class="fa-solid fa-building-columns text-white text-xl"></i></div>
-          <span class="text-xs font-mono text-white/50">2015</span>
-        </div>
-        <h3 class="font-display text-lg font-bold mb-1">Kendua Joy Hari Spry Govt. High School</h3>
-        <p class="text-cyan-300 text-sm mb-3">Kendua, Netrokona</p>
-        <p class="text-sm text-white/70">Secondary · Science</p>
-        <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-sm">
-          <span class="text-white/50">GPA</span><span class="font-mono text-pink-300 font-bold">4.72 / 5</span>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Achievements -->
-    <div class="reveal grid sm:grid-cols-2 gap-6">
-      <div class="glass glass-hover rounded-3xl p-7 flex items-center gap-5">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-3xl shrink-0">
-          <i class="fa-solid fa-language text-white"></i>
-        </div>
-        <div>
-          <h4 class="font-display text-lg font-bold">IELTS · 6.0</h4>
-          <p class="text-sm text-white/60">British Council Certification</p>
-        </div>
-      </div>
-      <div class="glass glass-hover rounded-3xl p-7 flex items-center gap-5">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-3xl shrink-0">
-          <i class="fa-solid fa-certificate text-white"></i>
-        </div>
-        <div>
-          <h4 class="font-display text-lg font-bold">Elasticsearch 8</h4>
-          <p class="text-sm text-white/60">Certified from Udemy</p>
+
+        <div class="glass p-7 reveal-r" style="transition-delay:.1s">
+          <div class="flex items-center gap-3 mb-5">
+            <i class="fas fa-language text-[var(--accent-3)] text-xl"></i>
+            <h3 class="font-display font-bold text-xl">Languages</h3>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>Bengali</span><span class="text-[var(--muted)]">Native</span>
+              </div>
+              <div class="h-1 bg-[var(--border)] rounded-full overflow-hidden"><div class="h-full bg-[var(--accent)]" style="width:100%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>English</span><span class="text-[var(--muted)]">Professional</span>
+              </div>
+              <div class="h-1 bg-[var(--border)] rounded-full overflow-hidden"><div class="h-full bg-[var(--accent-3)]" style="width:80%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>Hindi</span><span class="text-[var(--muted)]">Conversational</span>
+              </div>
+              <div class="h-1 bg-[var(--border)] rounded-full overflow-hidden"><div class="h-full bg-[var(--accent-2)]" style="width:60%"></div></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -649,330 +932,413 @@
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="relative py-28 px-6" style="z-index:1;">
-  <div class="max-w-5xl mx-auto">
-    <div class="reveal flex items-center gap-4 mb-14">
-      <span class="font-mono text-sm text-pink-300">06 //</span>
-      <h2 class="font-display text-4xl sm:text-5xl font-bold">Let's <span class="grad-text">Connect</span></h2>
-      <div class="flex-1 h-px bg-gradient-to-r from-pink-500/50 to-transparent"></div>
-    </div>
-    
-    <div class="grid lg:grid-cols-2 gap-8">
-      <!-- left -->
-      <div class="reveal space-y-6">
-        <h3 class="font-display text-3xl sm:text-4xl font-bold leading-tight">
-          Have a project in mind? <br><span class="grad-text">Let's build it together.</span>
-        </h3>
-        <p class="text-white/65">Whether it's deploying ML models at scale, building intelligent APIs, or automating your infrastructure — I'm always open to discussing new opportunities and challenges.</p>
-        
-        <div class="space-y-3 pt-4">
-          <a href="mailto:aniklpu01@gmail.com" class="glass glass-hover rounded-2xl p-4 flex items-center gap-4 group">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center"><i class="fa-solid fa-envelope text-white"></i></div>
-            <div class="flex-1"><div class="text-xs text-white/50 font-mono">EMAIL</div><div class="font-medium">aniklpu01@gmail.com</div></div>
-            <i class="fa-solid fa-arrow-right text-pink-300 group-hover:translate-x-1 transition"></i>
+<section id="contact" class="py-24 md:py-36 px-6 md:px-10 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="glass p-10 md:p-16 reveal relative overflow-hidden" style="background:linear-gradient(135deg,rgba(21,21,28,0.8) 0%,rgba(21,21,28,0.5) 100%)">
+      <!-- Decorative -->
+      <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full" style="background:radial-gradient(circle,rgba(197,255,61,0.12) 0%,transparent 70%)"></div>
+      <div class="absolute -bottom-20 -left-20 w-72 h-72 rounded-full" style="background:radial-gradient(circle,rgba(255,107,61,0.1) 0%,transparent 70%)"></div>
+
+      <div class="relative grid md:grid-cols-12 gap-10">
+        <div class="md:col-span-7">
+          <span class="section-num">06 / CONTACT</span>
+          <h2 class="font-display font-extrabold text-4xl md:text-6xl mt-6 leading-[0.95] mb-6">
+            Let's build<br/>something <span class="text-grad">intelligent.</span>
+          </h2>
+          <p class="text-[var(--muted)] text-lg max-w-md mb-8">
+            Open to opportunities in AI engineering, ML infrastructure, and full-stack intelligent systems. Let's talk.
+          </p>
+          <a href="mailto:aniklpu01@gmail.com" class="btn accent magnetic">
+            <i class="fas fa-paper-plane"></i> aniklpu01@gmail.com
           </a>
-          <a href="tel:+8801627220072" class="glass glass-hover rounded-2xl p-4 flex items-center gap-4 group">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i class="fa-solid fa-phone text-white"></i></div>
-            <div class="flex-1"><div class="text-xs text-white/50 font-mono">PHONE</div><div class="font-medium">+880 1627 220072</div></div>
-            <i class="fa-solid fa-arrow-right text-cyan-300 group-hover:translate-x-1 transition"></i>
-          </a>
-          <div class="glass rounded-2xl p-4 flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"><i class="fa-solid fa-location-dot text-white"></i></div>
-            <div class="flex-1"><div class="text-xs text-white/50 font-mono">LOCATION</div><div class="font-medium">Nikunja 2, Dhaka, Bangladesh</div></div>
+        </div>
+
+        <div class="md:col-span-5 space-y-5">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
+              <i class="fas fa-phone text-[var(--accent)] text-sm"></i>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">Phone</p>
+              <a href="tel:+8801627220072" class="a-link">+880 1627 220072</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
+              <i class="fas fa-location-dot text-[var(--accent-3)] text-sm"></i>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">Location</p>
+              <p>Nikunja 2, Dhaka, Bangladesh</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
+              <i class="fab fa-github text-[var(--fg)] text-sm"></i>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">GitHub</p>
+              <a href="https://github.com/anikpy" target="_blank" class="a-link">github.com/anikpy</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
+              <i class="fab fa-linkedin text-[var(--accent-2)] text-sm"></i>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">LinkedIn</p>
+              <a href="https://www.linkedin.com/in/md-arifur-rahman-anik-a32232172/" target="_blank" class="a-link">md-arifur-rahman-anik</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded border border-[var(--border)]">
+              <i class="fas fa-globe text-[var(--accent)] text-sm"></i>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] tracking-widest text-[var(--muted)] uppercase mb-1">Portfolio</p>
+              <a href="https://anikpy.github.io/MyPortfolio/" target="_blank" class="a-link">anikpy.github.io</a>
+            </div>
           </div>
         </div>
       </div>
-      
-      <!-- form -->
-      <form id="contactForm" class="reveal glass rounded-3xl p-7 space-y-4">
-        <div>
-          <label class="text-xs font-mono text-white/50 mb-1.5 block">YOUR NAME</label>
-          <input required type="text" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500/60 focus:bg-white/10 transition" placeholder="John Doe">
-        </div>
-        <div>
-          <label class="text-xs font-mono text-white/50 mb-1.5 block">YOUR EMAIL</label>
-          <input required type="email" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500/60 focus:bg-white/10 transition" placeholder="john@example.com">
-        </div>
-        <div>
-          <label class="text-xs font-mono text-white/50 mb-1.5 block">MESSAGE</label>
-          <textarea required rows="4" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500/60 focus:bg-white/10 transition resize-none" placeholder="Tell me about your project..."></textarea>
-        </div>
-        <button type="submit" class="btn-grad w-full py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2">
-          <i class="fa-solid fa-paper-plane"></i> Send Message
-        </button>
-        <p id="formMsg" class="text-center text-sm text-cyan-300 hidden">Thanks! I'll get back to you soon. <i class="fa-solid fa-check-circle"></i></p>
-      </form>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer class="relative py-10 px-6 border-t border-white/10" style="z-index:1; background:rgba(7,6,23,.6);">
-  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 via-violet-500 to-cyan-400 flex items-center justify-center font-display font-black">A</div>
-      <div>
-        <div class="font-display font-bold">Md Arifur Rahman Anik</div>
-        <div class="text-xs text-white/50 font-mono">AI/ML & DevOps Engineer</div>
-      </div>
+<footer class="border-t border-[var(--border)] py-10 px-6 md:px-10 relative">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+    <p class="font-mono text-xs text-[var(--muted)] tracking-widest">© 2025 MD ARIFUR RAHMAN ANIK · AI/ML & DEVOPS</p>
+    <div class="flex items-center gap-2 font-mono text-xs text-[var(--muted)]">
+      <span class="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse"></span>
+      <span>AVAILABLE FOR WORK</span>
     </div>
-    <div class="flex items-center gap-3 text-white/80">
-      <a href="https://github.com/anikpy" target="_blank" class="w-10 h-10 rounded-full glass glass-hover flex items-center justify-center"><i class="fa-brands fa-github"></i></a>
-      <a href="https://www.linkedin.com/in/md-arifur-rahman-anik-a32232172/" target="_blank" class="w-10 h-10 rounded-full glass glass-hover flex items-center justify-center"><i class="fa-brands fa-linkedin-in"></i></a>
-      <a href="mailto:aniklpu01@gmail.com" class="w-10 h-10 rounded-full glass glass-hover flex items-center justify-center"><i class="fa-solid fa-envelope"></i></a>
-    </div>
-    <p class="text-xs text-white/40 font-mono">© 2025 — Designed with <i class="fa-solid fa-heart text-pink-400"></i> & Three.js</p>
+    <a href="#hero" class="a-link font-mono text-xs text-[var(--muted)] tracking-widest magnetic">BACK TO TOP ↑</a>
   </div>
 </footer>
 
-<!-- ============ SCRIPTS ============ -->
+</main>
+
 <script type="module">
 import * as THREE from 'three';
 
-/* ---------- 3D background: floating geometric shapes ---------- */
-const canvas = document.getElementById('bg3d');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+/* ====== LOADER ====== */
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('gone'), 900);
+});
+
+/* ====== CUSTOM CURSOR ====== */
+const dot = document.querySelector('.cursor-dot');
+const ring = document.querySelector('.cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+window.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+});
+function animateRing(){
+  rx += (mx - rx) * 0.15;
+  ry += (my - ry) * 0.15;
+  ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+document.querySelectorAll('a, button, .tilt, .magnetic').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+});
+
+/* ====== MAGNETIC BUTTONS ====== */
+document.querySelectorAll('.magnetic').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width/2;
+    const y = e.clientY - rect.top - rect.height/2;
+    el.style.transform = `translate(${x*0.2}px,${y*0.2}px)`;
+  });
+  el.addEventListener('mouseleave', () => {
+    el.style.transform = '';
+  });
+});
+
+/* ====== MOBILE MENU ====== */
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+menuBtn?.addEventListener('click', () => {
+  mobileMenu.classList.toggle('open');
+  menuBtn.innerHTML = mobileMenu.classList.contains('open') ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
+});
+document.querySelectorAll('.mobile-link').forEach(l => {
+  l.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+  });
+});
+
+/* ====== SCROLL REVEAL ====== */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal, .reveal-l, .reveal-r').forEach(el => observer.observe(el));
+
+/* ====== COUNTERS ====== */
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = +el.dataset.target;
+      let current = 0;
+      const step = target / 50;
+      const tick = () => {
+        current += step;
+        if (current < target) {
+          el.textContent = Math.floor(current) + (target >= 500 ? '+' : '');
+          requestAnimationFrame(tick);
+        } else {
+          el.textContent = target + (target >= 500 ? '+' : '+');
+        }
+      };
+      tick();
+      counterObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter').forEach(el => counterObs.observe(el));
+
+/* ====== 3D TILT ON PROJECT CARDS ====== */
+document.querySelectorAll('.tilt').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(1000px) rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+/* ====== THREE.JS SCENE ====== */
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a0a0d, 0.05);
+
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
-camera.position.z = 8;
+camera.position.set(0, 0, 14);
 
-// Lights
-const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambient);
-const dir1 = new THREE.DirectionalLight(0xff2d95, 1.2); dir1.position.set(5,5,5); scene.add(dir1);
-const dir2 = new THREE.DirectionalLight(0x06b6d4, 1.0); dir2.position.set(-5,-3,3); scene.add(dir2);
-const dir3 = new THREE.DirectionalLight(0xf59e0b, 0.6); dir3.position.set(0,5,-3); scene.add(dir3);
-
-// Group for shapes
-const group = new THREE.Group();
-scene.add(group);
-
-const geometries = [
-  new THREE.IcosahedronGeometry(0.9, 0),
-  new THREE.OctahedronGeometry(0.85, 0),
-  new THREE.TorusGeometry(0.7, 0.22, 16, 50),
-  new THREE.TorusKnotGeometry(0.5, 0.18, 80, 12),
-  new THREE.DodecahedronGeometry(0.85, 0),
-  new THREE.ConeGeometry(0.7, 1.2, 6),
-  new THREE.BoxGeometry(1,1,1),
-  new THREE.TetrahedronGeometry(1, 0),
+/* --- Particle neural network --- */
+const particleCount = window.innerWidth < 768 ? 90 : 180;
+const positions = new Float32Array(particleCount * 3);
+const velocities = new Float32Array(particleCount * 3);
+const baseColors = [
+  new THREE.Color(0xc5ff3d),
+  new THREE.Color(0xff6b3d),
+  new THREE.Color(0x52e5d4),
+  new THREE.Color(0xf4efe4),
 ];
+const colors = new Float32Array(particleCount * 3);
 
-const colors = [0xff2d95, 0x7c3aed, 0x06b6d4, 0xf59e0b, 0x22d3ee, 0xa3e635, 0xec4899, 0x8b5cf6];
-const shapes = [];
+for (let i = 0; i < particleCount; i++) {
+  const r = 6 + Math.random() * 8;
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos(2 * Math.random() - 1);
+  positions[i*3]   = r * Math.sin(phi) * Math.cos(theta);
+  positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+  positions[i*3+2] = r * Math.cos(phi) - 3;
 
-for(let i=0;i<16;i++){
-  const geo = geometries[i % geometries.length];
-  const mat = new THREE.MeshPhysicalMaterial({
-    color: colors[i % colors.length],
-    metalness: 0.4,
-    roughness: 0.2,
-    transparent: true,
-    opacity: 0.85,
-    clearcoat: 0.6,
-    clearcoatRoughness: 0.2,
-    emissive: colors[i % colors.length],
-    emissiveIntensity: 0.15,
-  });
-  const mesh = new THREE.Mesh(geo, mat);
-  // wireframe overlay
-  const wire = new THREE.LineSegments(
-    new THREE.EdgesGeometry(geo),
-    new THREE.LineBasicMaterial({ color:0xffffff, transparent:true, opacity:0.18 })
-  );
-  mesh.add(wire);
-  
-  // Position
-  mesh.position.set(
-    (Math.random()-0.5) * 18,
-    (Math.random()-0.5) * 12,
-    (Math.random()-0.5) * 8 - 2
-  );
-  mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-  const scale = 0.5 + Math.random()*0.9;
-  mesh.scale.setScalar(scale);
-  
-  mesh.userData = {
-    speed: 0.2 + Math.random()*0.5,
-    rotSpeed: { x:(Math.random()-0.5)*0.01, y:(Math.random()-0.5)*0.01, z:(Math.random()-0.5)*0.01 },
-    floatPhase: Math.random()*Math.PI*2,
-    baseY: mesh.position.y,
-  };
-  group.add(mesh);
-  shapes.push(mesh);
+  velocities[i*3]   = (Math.random() - 0.5) * 0.01;
+  velocities[i*3+1] = (Math.random() - 0.5) * 0.01;
+  velocities[i*3+2] = (Math.random() - 0.5) * 0.01;
+
+  const c = baseColors[Math.floor(Math.random() * baseColors.length)];
+  colors[i*3] = c.r;
+  colors[i*3+1] = c.g;
+  colors[i*3+2] = c.b;
 }
 
-// Particles
-const particleCount = 600;
-const positions = new Float32Array(particleCount*3);
-const pcolors = new Float32Array(particleCount*3);
-const palette = [
-  [1,0.18,0.58],[0.49,0.23,0.93],[0.02,0.71,0.83],[0.96,0.62,0.04]
-];
-for(let i=0;i<particleCount;i++){
-  positions[i*3]   = (Math.random()-0.5)*30;
-  positions[i*3+1] = (Math.random()-0.5)*20;
-  positions[i*3+2] = (Math.random()-0.5)*15 - 3;
-  const c = palette[i % palette.length];
-  pcolors[i*3]=c[0]; pcolors[i*3+1]=c[1]; pcolors[i*3+2]=c[2];
-}
 const pGeo = new THREE.BufferGeometry();
 pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-pGeo.setAttribute('color', new THREE.BufferAttribute(pcolors, 3));
-const pMat = new THREE.PointsMaterial({ size:0.04, vertexColors:true, transparent:true, opacity:0.8, depthWrite:false, blending:THREE.AdditiveBlending });
-const particles = new THREE.Points(pGeo, pMat);
-scene.add(particles);
+pGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-// Mouse parallax
-const mouse = { x:0, y:0, tx:0, ty:0 };
-window.addEventListener('mousemove', (e)=>{
-  mouse.tx = (e.clientX/window.innerWidth - 0.5) * 2;
-  mouse.ty = (e.clientY/window.innerHeight - 0.5) * 2;
+const pMat = new THREE.PointsMaterial({
+  size: 0.08,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.9,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+  sizeAttenuation: true
 });
 
-// Resize
-window.addEventListener('resize', ()=>{
-  camera.aspect = window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+const points = new THREE.Points(pGeo, pMat);
+scene.add(points);
+
+/* --- Connection lines --- */
+const lineMax = 280;
+const linePositions = new Float32Array(lineMax * 6);
+const lineColors = new Float32Array(lineMax * 6);
+const lineGeo = new THREE.BufferGeometry();
+lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+lineGeo.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
+const lineMat = new THREE.LineBasicMaterial({
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.35,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+const lines = new THREE.LineSegments(lineGeo, lineMat);
+scene.add(lines);
+
+/* --- Wireframe shapes --- */
+const shapes = [];
+
+// Central icosahedron
+const icoGeo = new THREE.IcosahedronGeometry(2.4, 1);
+const icoWire = new THREE.LineSegments(
+  new THREE.EdgesGeometry(icoGeo),
+  new THREE.LineBasicMaterial({ color: 0xc5ff3d, transparent: true, opacity: 0.25 })
+);
+icoWire.position.set(0, 0, -2);
+scene.add(icoWire);
+shapes.push({ obj: icoWire, rx: 0.001, ry: 0.002, rz: 0 });
+
+// Torus
+const torusGeo = new THREE.TorusGeometry(3.5, 0.05, 8, 64);
+const torusWire = new THREE.LineSegments(
+  new THREE.EdgesGeometry(torusGeo),
+  new THREE.LineBasicMaterial({ color: 0xff6b3d, transparent: true, opacity: 0.2 })
+);
+torusWire.position.set(0, 0, -2);
+scene.add(torusWire);
+shapes.push({ obj: torusWire, rx: 0.0015, ry: 0, rz: 0.001 });
+
+// Outer octahedron
+const octaGeo = new THREE.OctahedronGeometry(5, 0);
+const octaWire = new THREE.LineSegments(
+  new THREE.EdgesGeometry(octaGeo),
+  new THREE.LineBasicMaterial({ color: 0x52e5d4, transparent: true, opacity: 0.12 })
+);
+octaWire.position.set(0, 0, -2);
+scene.add(octaWire);
+shapes.push({ obj: octaWire, rx: 0, ry: -0.001, rz: 0.0005 });
+
+/* --- Mouse parallax --- */
+let mouseX = 0, mouseY = 0;
+let targetX = 0, targetY = 0;
+window.addEventListener('mousemove', e => {
+  mouseX = (e.clientX / window.innerWidth - 0.5);
+  mouseY = (e.clientY / window.innerHeight - 0.5);
 });
 
-// Animate
+/* --- Scroll-driven Z movement --- */
+let scrollY = 0;
+window.addEventListener('scroll', () => {
+  scrollY = window.scrollY;
+});
+
+/* --- Animation loop --- */
 const clock = new THREE.Clock();
 function animate(){
   const t = clock.getElapsedTime();
-  
-  mouse.x += (mouse.tx - mouse.x) * 0.05;
-  mouse.y += (mouse.ty - mouse.y) * 0.05;
-  
-  group.rotation.y = mouse.x * 0.3;
-  group.rotation.x = mouse.y * 0.2;
-  
-  shapes.forEach(s=>{
-    s.rotation.x += s.userData.rotSpeed.x;
-    s.rotation.y += s.userData.rotSpeed.y;
-    s.rotation.z += s.userData.rotSpeed.z;
-    s.position.y = s.userData.baseY + Math.sin(t * s.userData.speed + s.userData.floatPhase) * 0.6;
+
+  // Update particles
+  const posAttr = pGeo.attributes.position;
+  for (let i = 0; i < particleCount; i++) {
+    posAttr.array[i*3]   += velocities[i*3];
+    posAttr.array[i*3+1] += velocities[i*3+1];
+    posAttr.array[i*3+2] += velocities[i*3+2];
+
+    // Wrap
+    for (let j = 0; j < 3; j++) {
+      if (Math.abs(posAttr.array[i*3+j]) > 15) {
+        posAttr.array[i*3+j] *= -0.9;
+      }
+    }
+  }
+  posAttr.needsUpdate = true;
+
+  // Update lines (connect nearby particles)
+  let lineCount = 0;
+  const maxDist = 3.5;
+  const maxDistSq = maxDist * maxDist;
+  for (let i = 0; i < particleCount && lineCount < lineMax; i++) {
+    for (let j = i+1; j < particleCount && lineCount < lineMax; j++) {
+      const dx = posAttr.array[i*3]   - posAttr.array[j*3];
+      const dy = posAttr.array[i*3+1] - posAttr.array[j*3+1];
+      const dz = posAttr.array[i*3+2] - posAttr.array[j*3+2];
+      const distSq = dx*dx + dy*dy + dz*dz;
+      if (distSq < maxDistSq) {
+        const alpha = 1 - (distSq / maxDistSq);
+        const idx = lineCount * 6;
+        linePositions[idx]   = posAttr.array[i*3];
+        linePositions[idx+1] = posAttr.array[i*3+1];
+        linePositions[idx+2] = posAttr.array[i*3+2];
+        linePositions[idx+3] = posAttr.array[j*3];
+        linePositions[idx+4] = posAttr.array[j*3+1];
+        linePositions[idx+5] = posAttr.array[j*3+2];
+
+        lineColors[idx]   = colors[i*3] * alpha;
+        lineColors[idx+1] = colors[i*3+1] * alpha;
+        lineColors[idx+2] = colors[i*3+2] * alpha;
+        lineColors[idx+3] = colors[j*3] * alpha;
+        lineColors[idx+4] = colors[j*3+1] * alpha;
+        lineColors[idx+5] = colors[j*3+2] * alpha;
+        lineCount++;
+      }
+    }
+  }
+  // Hide unused
+  for (let i = lineCount * 6; i < lineMax * 6; i++) {
+    linePositions[i] = 0;
+  }
+  lineGeo.attributes.position.needsUpdate = true;
+  lineGeo.attributes.color.needsUpdate = true;
+  lineGeo.setDrawRange(0, lineCount * 2);
+
+  // Rotate shapes
+  shapes.forEach(s => {
+    s.obj.rotation.x += s.rx;
+    s.obj.rotation.y += s.ry;
+    s.obj.rotation.z += s.rz;
   });
-  
-  particles.rotation.y = t * 0.02;
-  particles.rotation.x = mouse.y * 0.1;
-  
-  camera.position.x += (mouse.x * 0.5 - camera.position.x) * 0.05;
-  camera.position.y += (-mouse.y * 0.5 - camera.position.y) * 0.05;
-  camera.lookAt(0,0,0);
-  
+
+  // Subtle points rotation
+  points.rotation.y = t * 0.05;
+  points.rotation.x = Math.sin(t * 0.1) * 0.1;
+
+  // Camera parallax
+  targetX += (mouseX * 2 - targetX) * 0.04;
+  targetY += (mouseY * 2 - targetY) * 0.04;
+  camera.position.x = targetX;
+  camera.position.y = -targetY;
+  camera.position.z = 14 + scrollY * 0.002;
+  camera.lookAt(0, 0, -2);
+
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 animate();
 
-/* ---------- Projects data + render ---------- */
-const projects = [
-  { title:"Candidate Search with GPT-OSS RAG", icon:"fa-magnifying-glass-chart", color:"from-pink-500 to-rose-600", tags:["Python","gpt-oss","RAG","Elasticsearch","Nginx"], desc:"Built & deployed a RAG-based model using gpt-oss to match CVs with job descriptions and retrieve the best candidates efficiently." },
-  { title:"Ollama (gpt-oss:20b) on Vast.ai", icon:"fa-brain", color:"from-violet-500 to-purple-700", tags:["ML","Ollama","gpt-oss","DevOps"], desc:"Deployed an Ollama-based 20B ML model in production, responsible for extracting skills and other data from CVs." },
-  { title:"Gemma 4B Image Explanation", icon:"fa-image", color:"from-cyan-500 to-blue-600", tags:["Gemma","Ollama","Nginx","DevOps"], desc:"Deployed a Gemma 4B model in production to read images and generate natural-language explanations." },
-  { title:"Automated Gmail Using n8n", icon:"fa-envelope-open-text", color:"from-amber-500 to-orange-600", tags:["n8n","Gmail","Automation"], desc:"Deployed an n8n instance to automate Gmail functionalities for candidates end-to-end." },
-  { title:"Containerized Deployments & CI/CD", icon:"fa-infinity", color:"from-emerald-500 to-teal-600", tags:["Docker","Jenkins","Kubernetes"], desc:"Established CI/CD pipelines using Jenkins and Docker, automating build & deployment. Managed K8s clusters for scalable updates." },
-  { title:"Redis Caching for High-Traffic", icon:"fa-bolt", color:"from-pink-500 to-fuchsia-600", tags:["Redis","Python","Performance"], desc:"Integrated Redis caching in high-traffic apps, significantly improving response times and reducing latency under heavy load." },
-  { title:"Advanced NLP & ML Solutions", icon:"fa-language", color:"from-violet-500 to-indigo-600", tags:["TensorFlow","OpenCV","BERT","NLP"], desc:"Developed NLP solutions using LLM & BERT embeddings for text classification. Deployed image detection API with TensorFlow + OpenCV." },
-  { title:"Job Post Refactoring & Location API", icon:"fa-location-dot", color:"from-cyan-500 to-sky-600", tags:["Nominatim","PostgreSQL","Python"], desc:"Engineered a tool to clean & structure job post data, integrating Nominatim with PostgreSQL for precise location extraction." },
-  { title:"Document Processing API Suite", icon:"fa-file-pdf", color:"from-amber-500 to-yellow-600", tags:["Python","PDF","API"], desc:"Designed a suite of APIs — PDF merger, image extractor, text extractor — streamlining document workflows in production." },
-  { title:"Scalable Web Scraping Engine", icon:"fa-spider", color:"from-rose-500 to-red-600", tags:["Scrapy","Selenium","Nginx"], desc:"Built a scalable scraping engine using Scrapy on Nginx, processing structured & unstructured data from 500+ websites." },
-  { title:"Elasticsearch Cluster (3 Nodes)", icon:"fa-database", color:"from-teal-500 to-emerald-600", tags:["Elasticsearch","Kibana","Gunicorn"], desc:"Deployed a 3-node ES cluster with vector embedding storage & semantic search. Custom keyword semantic search implemented." },
-  { title:"Ollama (LLAMA2) on Nginx", icon:"fa-robot", color:"from-fuchsia-500 to-purple-600", tags:["ML","LLAMA2","Nginx","DevOps"], desc:"Deployed an Ollama-based LLAMA2 model in production responsible for recreating job descriptions." },
-  { title:"Application Deployment & Optimization", icon:"fa-server", color:"from-blue-500 to-indigo-600", tags:["Python","Nginx","Apache","K8s"], desc:"Led deployment of 50+ apps across Nginx, Apache, Kubernetes & Ingress. Optimized load balancing and fault tolerance." },
-  { title:"Geolocation & Travel-Time Service", icon:"fa-map-location-dot", color:"from-lime-500 to-green-600", tags:["Nominatim","PostgreSQL"], desc:"Installed & configured Nominatim and Isochrone services for precise geographical data handling and travel-time queries." },
-];
-
-const grid = document.getElementById('projectsGrid');
-projects.forEach((p, i)=>{
-  const card = document.createElement('div');
-  card.className = `reveal pcard glass glass-hover rounded-3xl p-6 cursor-pointer`;
-  card.innerHTML = `
-    <div class="flex items-center justify-between mb-5">
-      <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${p.color} flex items-center justify-center shadow-lg">
-        <i class="fa-solid ${p.icon} text-white text-lg"></i>
-      </div>
-      <span class="font-mono text-xs text-white/30">0${(i+1).toString().padStart(2,'0')}</span>
-    </div>
-    <h3 class="font-display text-lg font-bold mb-2 leading-snug">${p.title}</h3>
-    <p class="text-sm text-white/60 mb-4 leading-relaxed">${p.desc}</p>
-    <div class="flex flex-wrap gap-1.5">
-      ${p.tags.map(t=>`<span class="text-[11px] font-mono px-2 py-0.5 rounded-md bg-white/5 text-white/70">${t}</span>`).join('')}
-    </div>
-  `;
-  // mouse glow
-  card.addEventListener('mousemove', (e)=>{
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', (e.clientX-r.left)+'px');
-    card.style.setProperty('--my', (e.clientY-r.top)+'px');
-  });
-  grid.appendChild(card);
+/* --- Resize --- */
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-/* ---------- Reveal on scroll ---------- */
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.classList.add('in');
-      io.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.12 });
-document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
-
-/* ---------- Nav active state on scroll ---------- */
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-link');
-const navObserver = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      const id = e.target.id;
-      navLinks.forEach(l=>{
-        l.classList.toggle('active', l.getAttribute('href') === '#'+id);
-      });
-    }
-  });
-}, { threshold: 0.4 });
-sections.forEach(s=> navObserver.observe(s));
-
-/* ---------- Smooth scroll for nav ---------- */
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click', (e)=>{
-    const target = document.querySelector(a.getAttribute('href'));
-    if(target){
-      e.preventDefault();
-      target.scrollIntoView({ behavior:'smooth', block:'start' });
-    }
-  });
-});
-
-/* ---------- Contact form ---------- */
-const form = document.getElementById('contactForm');
-form.addEventListener('submit', (e)=>{
-  e.preventDefault();
-  const msg = document.getElementById('formMsg');
-  msg.classList.remove('hidden');
-  form.reset();
-  setTimeout(()=> msg.classList.add('hidden'), 4000);
-});
-
-/* ---------- Tilt effect on glass-hover cards ---------- */
-document.querySelectorAll('.glass-hover').forEach(card=>{
-  card.addEventListener('mousemove', (e)=>{
-    const r = card.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    card.style.transform = `translateY(-6px) perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`;
-  });
-  card.addEventListener('mouseleave', ()=>{
-    card.style.transform = '';
-  });
-});
+/* --- Reduced motion --- */
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  renderer.setAnimationLoop(null);
+}
 </script>
+
 </body>
 </html>
